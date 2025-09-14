@@ -5,6 +5,7 @@ import z from 'zod'
 import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
 import { BadRequestError } from '../_errors/bad-request-error'
+import { env } from "@saas/env"
 
 export async function authenticateWithGithub(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -32,13 +33,13 @@ export async function authenticateWithGithub(app: FastifyInstance) {
 
       githubOAuthUrl.searchParams.set(
         'client_secret',
-        '4da3c43f72632c8cdda6fe594ec1c42a4256e92d',
+        env.GITHUB_OAUTH_CLIENT_SECRET,
       )
       githubOAuthUrl.searchParams.set(
         'redirect_uri',
-        'http://localhost:3000/api/auth/callback',
+        env.GITHUB_OAUTH_REDIRECT_URI,
       )
-      githubOAuthUrl.searchParams.set('client_id', 'Ov23li66IMd5olUe7mEp')
+      githubOAuthUrl.searchParams.set('client_id', env.GITHUB_OAUTH_CLIENT_ID)
       githubOAuthUrl.searchParams.set('code', code)
 
       const githubAccessTokenResponse = await fetch(githubOAuthUrl, {

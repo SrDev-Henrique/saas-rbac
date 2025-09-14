@@ -16,7 +16,8 @@ import { getProfile } from './routes/auth/get-profile'
 import { erorrHandler } from './error-handler'
 import { requestPasswordRecover } from './routes/auth/request-password-recover'
 import { resetPassword } from './routes/auth/reset-password'
-import { authenticateWithGithub } from "./routes/auth/authenticate-with-github"
+import { authenticateWithGithub } from './routes/auth/authenticate-with-github'
+import { env } from '@saas/env'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -33,7 +34,16 @@ app.register(fastifySwagger, {
         'fullstack SaaS multi-tenant & RBAC with Next.js, Prisma, Fastify, Zod and TypeScript',
       version: '1.0.0',
     },
-    servers: [],
+    servers: [{ url: `http://localhost:${env.SERVER_PORT}` }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
   transform: jsonSchemaTransform,
 })
@@ -43,7 +53,7 @@ app.register(fastifySwaggerUi, {
 })
 
 app.register(fastifyJwt, {
-  secret: 'my-jwt-secret',
+  secret: env.JWT_SECRET,
 })
 
 app.register(fastiyCors)
@@ -54,6 +64,6 @@ app.register(authenticateWithGithub)
 app.register(resetPassword)
 app.register(requestPasswordRecover)
 
-app.listen({ port: 3000 }).then(() => {
-  console.log('HTTP server running on port 3000')
+app.listen({ port: env.SERVER_PORT }).then(() => {
+  console.log(`HTTP server running on port ${env.SERVER_PORT}`)
 })
