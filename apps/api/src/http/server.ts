@@ -16,6 +16,7 @@ import { getProfile } from './routes/auth/get-profile'
 import { erorrHandler } from './error-handler'
 import { requestPasswordRecover } from './routes/auth/request-password-recover'
 import { resetPassword } from './routes/auth/reset-password'
+import { authenticateWithGithub } from "./routes/auth/authenticate-with-github"
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -46,16 +47,12 @@ app.register(fastifyJwt, {
 })
 
 app.register(fastiyCors)
-
 app.register(createAccount)
-
-app.register(authenticateWithPassword)
-
 app.register(getProfile)
-
-app.register(requestPasswordRecover)
-
+app.register(authenticateWithPassword)
+app.register(authenticateWithGithub)
 app.register(resetPassword)
+app.register(requestPasswordRecover)
 
 app.listen({ port: 3000 }).then(() => {
   console.log('HTTP server running on port 3000')
