@@ -12,7 +12,7 @@ export async function getOrganizations(app: FastifyInstance) {
       '/organizations',
       {
         schema: {
-          tags: ['organizations'],
+          tags: ['Organizations'],
           summary: 'Get all organizations wherer user is a member',
           security: [{ bearerAuth: [] }],
           response: {
