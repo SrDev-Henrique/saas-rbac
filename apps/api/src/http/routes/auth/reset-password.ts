@@ -3,7 +3,7 @@ import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { z } from 'zod'
-import { UnauthorizedError } from '../_errors/unauthorized_error'
+import { UnauthorizedError } from '../_errors/unauthorized-error'
 import { hash } from 'bcryptjs'
 
 export async function resetPassword(app: FastifyInstance) {

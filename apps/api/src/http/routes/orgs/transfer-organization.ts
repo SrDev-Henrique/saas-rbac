@@ -5,7 +5,7 @@ import { organizationSchema } from '@saas/auth'
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { UnauthorizedError } from '../_errors/unauthorized_error'
+import { UnauthorizedError } from '../_errors/unauthorized-error'
 import { BadRequestError } from '../_errors/bad-request-error'
 
 export async function transferOrganization(app: FastifyInstance) {
