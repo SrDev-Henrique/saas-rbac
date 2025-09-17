@@ -7,7 +7,7 @@ import { UnauthorizedError } from '../_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { BadRequestError } from '../_errors/bad-request-error'
 
-export async function deleteMember(app: FastifyInstance) {
+export async function removeMember(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
@@ -37,7 +37,7 @@ export async function deleteMember(app: FastifyInstance) {
 
         if (cannot('delete', 'User')) {
           throw new UnauthorizedError(
-            'You are not allowed to delete this member',
+            'You are not allowed to remove this member',
           )
         }
 

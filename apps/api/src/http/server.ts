@@ -18,21 +18,21 @@ import { requestPasswordRecover } from './routes/auth/request-password-recover'
 import { resetPassword } from './routes/auth/reset-password'
 import { authenticateWithGithub } from './routes/auth/authenticate-with-github'
 import { env } from '@saas/env'
-import { createOrganization } from "./routes/orgs/create-organization"
-import { getMembership } from "./routes/orgs/get-membership"
-import { getOrganizations } from "./routes/orgs/get-organizations"
-import { getOrganization } from "./routes/orgs/get-organization"
-import { updateOrganization } from "./routes/orgs/update-organization"
-import { shutdownOrganization } from "./routes/orgs/shutdown-organization"
-import { transferOrganization } from "./routes/orgs/transfer-organization"
-import { createProject } from "./routes/projects/create-projects"
-import { deleteProject } from "./routes/projects/delete-project"
-import { getProject } from "./routes/projects/get-project"
-import { getProjects } from "./routes/projects/get-projects"
-import { updateProject } from "./routes/projects/update-project"
-import { getMembers } from "./routes/members/get-members"
-import { updateMember } from "./routes/members/update-member"
-import { deleteMember } from "./routes/members/delete-member"
+import { createOrganization } from './routes/orgs/create-organization'
+import { getMembership } from './routes/orgs/get-membership'
+import { getOrganizations } from './routes/orgs/get-organizations'
+import { getOrganization } from './routes/orgs/get-organization'
+import { updateOrganization } from './routes/orgs/update-organization'
+import { shutdownOrganization } from './routes/orgs/shutdown-organization'
+import { transferOrganization } from './routes/orgs/transfer-organization'
+import { createProject } from './routes/projects/create-projects'
+import { deleteProject } from './routes/projects/delete-project'
+import { getProject } from './routes/projects/get-project'
+import { getProjects } from './routes/projects/get-projects'
+import { updateProject } from './routes/projects/update-project'
+import { getMembers } from './routes/members/get-members'
+import { updateMember } from './routes/members/update-member'
+import { removeMember } from './routes/members/remove-member'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -96,7 +96,7 @@ app.register(updateProject)
 
 app.register(getMembers)
 app.register(updateMember)
-app.register(deleteMember)
+app.register(removeMember)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log(`HTTP server running on port ${env.SERVER_PORT}`)
