@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import GithubIcon from '@/lib/icons/Github'
 import Link from 'next/link'
+import { SignInWithEmail } from "./actions"
 
 export default function SignInPage() {
   return (
@@ -12,7 +13,7 @@ export default function SignInPage() {
         <h1 className="text-foreground text-2xl font-bold">Fazer login</h1>
       </div>
 
-      <form action="" className="w-full space-y-4">
+      <form action={SignInWithEmail} className="w-full space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">E-mail</Label>
           <Input type="email" id="email" name="email" />
