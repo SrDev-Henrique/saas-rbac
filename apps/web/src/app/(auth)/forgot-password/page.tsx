@@ -15,6 +15,7 @@ export default function ForgotPasswordPage() {
           Digite seu e-mail abaixo para receber um link de recuperação de senha.
         </p>
       </div>
+
       <form action="" className="w-full space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">E-mail</Label>

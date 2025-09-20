@@ -11,6 +11,7 @@ export default function SignInPage() {
       <div className="text-center">
         <h1 className="text-foreground text-2xl font-bold">Fazer login</h1>
       </div>
+
       <form action="" className="w-full space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">E-mail</Label>

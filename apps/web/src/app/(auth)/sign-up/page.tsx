@@ -11,6 +11,7 @@ export default function SignUpPage() {
       <div className="text-center">
         <h1 className="text-foreground text-2xl font-bold">Criar conta</h1>
       </div>
+
       <form action="" className="w-full space-y-4">
         <div className="space-y-2">
           <Label htmlFor="name">Nome</Label>
