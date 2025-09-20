@@ -1,5 +1,14 @@
-"use server"
+'use server'
 
-export async function SignInWithEmail(data: FormData) {
-  console.log(Object.fromEntries(data))
+import { signInWithPassword } from '@/http/sign-in-with-password'
+
+export async function SignInWithPassword(data: FormData) {
+  const { email, password } = Object.fromEntries(data)
+
+  const result = await signInWithPassword({
+    email: String(email),
+    password: String(password),
+  })
+
+  console.log(result)
 }
