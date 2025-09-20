@@ -9,25 +9,39 @@ import GithubIcon from '@/lib/icons/Github'
 import Link from 'next/link'
 import { useActionState } from 'react'
 import { Loader2 } from 'lucide-react'
+import RedAlert from '@/components/origin-ui/alert-red'
 
 export default function SignInFrom() {
-  const [state, formAction, isPending] = useActionState(
+  const [{ success, message, errors }, formAction, isPending] = useActionState(
     SignInWithPassword,
-    null,
+    {
+      success: false,
+      message: null,
+      errors: null,
+    },
   )
 
   return (
     <form action={formAction} className="w-full space-y-4">
-      {state && <p>{state}</p>}
+      {success === false && message && <RedAlert text={message} />}
 
       <div className="space-y-2">
         <Label htmlFor="email">E-mail</Label>
-        <Input type="email" id="email" name="email" />
+        <Input type="text" id="email" name="email" />
+        {errors?.properties?.email && (
+          <p className="text-sm font-medium text-red-500 dark:text-red-400">
+            {errors.properties.email.errors[0]}
+          </p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Senha</Label>
         <Input type="password" id="password" name="password" />
-
+        {errors?.properties?.password && (
+          <p className="text-sm font-medium text-red-500 dark:text-red-400">
+            {errors.properties.password.errors[0]}
+          </p>
+        )}
         <Link
           href="/forgot-password"
           className="text-foreground text-xs font-medium hover:underline"
