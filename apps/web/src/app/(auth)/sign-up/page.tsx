@@ -5,13 +5,17 @@ import { Separator } from '@/components/ui/separator'
 import GithubIcon from '@/lib/icons/Github'
 import Link from 'next/link'
 
-export default function SignInPage() {
+export default function SignUpPage() {
   return (
     <div className="flex w-full max-w-sm flex-col space-y-4">
       <div className="text-center">
-        <h1 className="text-foreground text-2xl font-bold">Fazer login</h1>
+        <h1 className="text-foreground text-2xl font-bold">Criar conta</h1>
       </div>
       <form action="" className="w-full space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">Nome</Label>
+          <Input id="name" name="name" />
+        </div>
         <div className="space-y-2">
           <Label htmlFor="email">E-mail</Label>
           <Input type="email" id="email" name="email" />
@@ -19,20 +23,19 @@ export default function SignInPage() {
         <div className="space-y-2">
           <Label htmlFor="password">Senha</Label>
           <Input type="password" id="password" name="password" />
-
-          <Link
-            href="/forgot-password"
-            className="text-foreground text-xs font-medium hover:underline"
-          >
-            Esqueceu sua senha?
-          </Link>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password-confirmation">Confirme sua senha</Label>
+          <Input
+            type="password"
+            id="password-confirmation"
+            name="password-confirmation"
+          />
         </div>
 
         <Button type="submit" className="w-full cursor-pointer">
-          Entrar com email
+          Criar conta
         </Button>
-
-        <Separator />
 
         <Button
           type="submit"
@@ -40,13 +43,13 @@ export default function SignInPage() {
           className="w-full cursor-pointer"
         >
           <GithubIcon />
-          Entrar com GitHub
+          Criar conta com GitHub
         </Button>
 
         <Separator />
 
         <Button variant="link" className="w-full cursor-pointer" asChild>
-          <Link href="/sign-up">Não tenho uma conta</Link>
+          <Link href="/sign-in">Já tenho uma conta</Link>
         </Button>
       </form>
     </div>
