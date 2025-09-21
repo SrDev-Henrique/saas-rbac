@@ -2,6 +2,9 @@
 
 import { z } from 'zod'
 
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+
 import { signInWithPassword } from '@/http/sign-in-with-password'
 import { HTTPError } from 'ky'
 import { signInFormSchema } from '@/lib/utils'
@@ -24,6 +27,12 @@ export async function SignInWithPassword(
       email,
       password,
     })
+
+    const cookieStore = await cookies()
+    cookieStore.set('token', token, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    })
   } catch (err) {
     if (err instanceof HTTPError) {
       const { message } = await err.response.json()
@@ -36,5 +45,5 @@ export async function SignInWithPassword(
     return { success: false, message: 'Erro ao fazer login', errors: null }
   }
 
-  return { success: true, message: null, errors: null }
+  redirect('/')
 }
