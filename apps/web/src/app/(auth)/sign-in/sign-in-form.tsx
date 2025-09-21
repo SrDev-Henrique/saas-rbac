@@ -27,7 +27,7 @@ export default function SignInFrom() {
 
       <div className="space-y-2">
         <Label htmlFor="email">E-mail</Label>
-        <Input type="text" id="email" name="email" />
+        <Input type="email" id="email" name="email" />
         {errors?.properties?.email && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
             {errors.properties.email.errors[0]}
