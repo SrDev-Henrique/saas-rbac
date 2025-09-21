@@ -1,4 +1,4 @@
-import SignInFrom from './sign-in-form'
+import SignInForm from './sign-in-form'
 
 export default function SignInPage() {
   return (
@@ -7,7 +7,7 @@ export default function SignInPage() {
         <h1 className="text-foreground text-2xl font-bold">Fazer login</h1>
       </div>
 
-      <SignInFrom />
+      <SignInForm />
     </div>
   )
 }
