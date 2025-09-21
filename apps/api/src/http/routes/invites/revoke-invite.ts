@@ -37,7 +37,7 @@ export async function revokeInvite(app: FastifyInstance) {
 
         if (cannot('delete', 'Invite')) {
           throw new UnauthorizedError(
-            'You are not allowed to revoke this invite.',
+            'Você não tem permissão para revogar este convite.',
           )
         }
 
@@ -49,7 +49,7 @@ export async function revokeInvite(app: FastifyInstance) {
         })
 
         if (!invite) {
-          throw new BadRequestError('Invite not found.')
+          throw new BadRequestError('Convite não encontrado.')
         }
         await prisma.invite.delete({
           where: {

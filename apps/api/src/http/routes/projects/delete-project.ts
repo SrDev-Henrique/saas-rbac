@@ -42,7 +42,7 @@ export async function deleteProject(app: FastifyInstance) {
         })
 
         if (!project) {
-          throw new BadRequestError('Project not found')
+          throw new BadRequestError('Projeto não encontrado')
         }
 
         const { cannot } = getUserPermissions(userId, membership.role)
@@ -51,7 +51,7 @@ export async function deleteProject(app: FastifyInstance) {
 
         if (cannot('delete', authProject)) {
           throw new UnauthorizedError(
-            'You are not allowed to delete this project',
+            'Você não tem permissão para deletar este projeto',
           )
         }
 

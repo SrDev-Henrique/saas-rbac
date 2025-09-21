@@ -53,7 +53,7 @@ export async function getProject(app: FastifyInstance) {
 
         if (cannot('get', 'Project')) {
           throw new UnauthorizedError(
-            `You're not allowed to see this projects.`,
+            `Você não tem permissão para ver este projeto.`,
           )
         }
 
@@ -82,7 +82,7 @@ export async function getProject(app: FastifyInstance) {
         })
 
         if (!project) {
-          throw new BadRequestError('Project not found.')
+          throw new BadRequestError('Projeto não encontrado.')
         }
 
         return reply.send({ project })

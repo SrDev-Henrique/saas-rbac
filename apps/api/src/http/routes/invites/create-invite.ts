@@ -42,7 +42,7 @@ export async function createInvite(app: FastifyInstance) {
 
         if (cannot('create', 'Invite')) {
           throw new UnauthorizedError(
-            'You are not allowed to create new invites.',
+            'Você não tem permissão para criar novos convites.',
           )
         }
 
@@ -58,7 +58,7 @@ export async function createInvite(app: FastifyInstance) {
         })
 
         if (inviteWithSameEmail) {
-          throw new BadRequestError('Invite with same email already exists.')
+          throw new BadRequestError('Convite com o mesmo email já existe.')
         }
 
         const memberWithSameEmail = await prisma.member.findFirst({
@@ -71,7 +71,7 @@ export async function createInvite(app: FastifyInstance) {
         })
 
         if (memberWithSameEmail) {
-          throw new BadRequestError('Member with same email already exists.')
+          throw new BadRequestError('Membro com o mesmo email já existe.')
         }
 
         const [, domain] = email.split('@')
@@ -81,7 +81,7 @@ export async function createInvite(app: FastifyInstance) {
           organization.domain === domain
         ) {
           throw new BadRequestError(
-            `Users with ${domain} domain will join your organization automatically on login.`,
+            `Usuários com o domínio ${domain} serão adicionados automaticamente à sua organização ao fazer login.`,
           )
         }
 

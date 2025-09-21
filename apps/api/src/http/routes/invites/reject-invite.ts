@@ -40,7 +40,7 @@ export async function rejectInvite(app: FastifyInstance) {
         })
 
         if (!invite) {
-          throw new BadRequestError('Invite not found.')
+          throw new BadRequestError('Convite não encontrado.')
         }
 
         const user = await prisma.user.findUnique({
@@ -50,11 +50,11 @@ export async function rejectInvite(app: FastifyInstance) {
         })
 
         if (!user) {
-          throw new BadRequestError('User not found.')
+          throw new BadRequestError('Usuário não encontrado.')
         }
 
         if (invite.email !== user.email) {
-          throw new BadRequestError('Invite email does not match user email.')
+          throw new BadRequestError('O email do convite não corresponde ao email do usuário.')
         }
 
         await prisma.invite.delete({
@@ -64,7 +64,7 @@ export async function rejectInvite(app: FastifyInstance) {
         })
 
         return reply.status(200).send({
-          message: 'Invite rejected successfully',
+          message: 'Convite rejeitado com sucesso',
         })
       },
     )

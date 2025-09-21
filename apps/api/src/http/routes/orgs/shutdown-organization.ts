@@ -39,7 +39,7 @@ export async function shutdownOrganization(app: FastifyInstance) {
 
         if (cannot('delete', authOrganization)) {
           throw new UnauthorizedError(
-            `You're not allowed to shutdown this organization.`,
+            `Você não tem permissão para encerrar esta organização.`,
           )
         }
 

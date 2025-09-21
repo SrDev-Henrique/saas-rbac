@@ -37,7 +37,7 @@ export async function removeMember(app: FastifyInstance) {
 
         if (cannot('delete', 'User')) {
           throw new UnauthorizedError(
-            'You are not allowed to remove this member',
+            'Você não tem permissão para remover este membro',
           )
         }
 
@@ -49,7 +49,7 @@ export async function removeMember(app: FastifyInstance) {
         })
 
         if (!member) {
-          throw new BadRequestError('Member not found')
+          throw new BadRequestError('Membro não encontrado')
         }
 
         await prisma.member.delete({

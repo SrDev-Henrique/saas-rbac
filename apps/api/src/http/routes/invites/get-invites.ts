@@ -52,7 +52,7 @@ export async function getInvites(app: FastifyInstance) {
 
         if (cannot('get', 'Invite')) {
           throw new UnauthorizedError(
-            'You are not allowed to get this organization invites.',
+            'Você não tem permissão para ver os convites desta organização.',
           )
         }
 
@@ -79,7 +79,7 @@ export async function getInvites(app: FastifyInstance) {
         })
 
         if (invites.length === 0) {
-          throw new BadRequestError('This organization has no invites.')
+          throw new BadRequestError('Esta organização não tem convites.')
         }
 
         return reply.send({ invites })

@@ -13,7 +13,7 @@ export const erorrHandler: FastifyErrorHandler = (error, request, reply) => {
     const validation = (error as any).validation ?? []
     return reply.status(400).send({
       statusCode: 400,
-      message: 'Validation error',
+      message: 'Erro de validação',
       errors: validation,
     })
   }
@@ -22,7 +22,7 @@ export const erorrHandler: FastifyErrorHandler = (error, request, reply) => {
     return reply.status(400).send({
       statusCode: 400,
       errors: z.treeifyError(error),
-      message: 'Validation error',
+      message: 'Erro de validação',
     })
   }
 
@@ -42,5 +42,5 @@ export const erorrHandler: FastifyErrorHandler = (error, request, reply) => {
 
   console.error(error)
 
-  return reply.status(500).send({ message: 'Internal server error' })
+  return reply.status(500).send({ message: 'Erro interno do servidor' })
 }

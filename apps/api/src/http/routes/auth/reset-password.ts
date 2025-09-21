@@ -30,7 +30,7 @@ export async function resetPassword(app: FastifyInstance) {
       })
 
       if (!tokenFromCode) {
-        throw new UnauthorizedError('Invalid code')
+        throw new UnauthorizedError('Código inválido')
       }
 
       const passwordHash = await hash(password, 6)

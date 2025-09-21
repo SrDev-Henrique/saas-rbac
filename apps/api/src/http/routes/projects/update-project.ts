@@ -46,7 +46,7 @@ export async function updateProject(app: FastifyInstance) {
         })
 
         if (!project) {
-          throw new BadRequestError('Project not found')
+          throw new BadRequestError('Projeto não encontrado')
         }
 
         const { cannot } = getUserPermissions(userId, membership.role)
@@ -55,7 +55,7 @@ export async function updateProject(app: FastifyInstance) {
 
         if (cannot('update', authProject)) {
           throw new UnauthorizedError(
-            'You are not allowed to delete this project',
+            'Você não tem permissão para atualizar este projeto',
           )
         }
 

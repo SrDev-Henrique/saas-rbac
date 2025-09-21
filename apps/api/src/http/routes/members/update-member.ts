@@ -41,7 +41,7 @@ export async function updateMember(app: FastifyInstance) {
 
         if (cannot('update', 'User')) {
           throw new UnauthorizedError(
-            'You are not allowed to update this member',
+            'Você não tem permissão para atualizar este membro',
           )
         }
 
@@ -53,7 +53,7 @@ export async function updateMember(app: FastifyInstance) {
         })
 
         if (!member) {
-          throw new BadRequestError('Member not found')
+          throw new BadRequestError('Membro não encontrado')
         }
 
         const { role } = request.body

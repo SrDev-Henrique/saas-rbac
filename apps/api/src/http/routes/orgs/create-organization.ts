@@ -46,7 +46,7 @@ export async function createOrganization(app: FastifyInstance) {
 
           if (organizationByDomain) {
             throw new BadRequestError(
-              'Organization with this domain already exists',
+              'Organização com este domínio já existe',
             )
           }
         }
@@ -69,7 +69,7 @@ export async function createOrganization(app: FastifyInstance) {
         })
 
         return reply.status(201).send({
-          message: 'Organization created successfully',
+          message: 'Organização criada com sucesso',
           organizationId: organization.id,
         })
       },

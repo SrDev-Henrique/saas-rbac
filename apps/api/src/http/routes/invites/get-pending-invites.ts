@@ -47,7 +47,7 @@ export async function getPendingInvites(app: FastifyInstance) {
         })
 
         if (!user) {
-          throw new BadRequestError('User not found.')
+          throw new BadRequestError('Usuário não encontrado.')
         }
 
         const invites = await prisma.invite.findMany({
@@ -73,7 +73,7 @@ export async function getPendingInvites(app: FastifyInstance) {
         })
 
         if (!invites) {
-          throw new BadRequestError('Invite not found.')
+          throw new BadRequestError('Convite não encontrado.')
         }
 
         return { invites }
