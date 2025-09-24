@@ -13,8 +13,6 @@ export const api = ky.create({
         if (token) {
           request.headers.set('Authorization', `Bearer ${token}`)
         }
-
-        console.log('beforeRequest', request.headers.get('Authorization'))
       },
     ],
     afterResponse: [
@@ -25,5 +23,5 @@ export const api = ky.create({
       },
     ],
   },
-  throwHttpErrors: false,
+  throwHttpErrors: true,
 })

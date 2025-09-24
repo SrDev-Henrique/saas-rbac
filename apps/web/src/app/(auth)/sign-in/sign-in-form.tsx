@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import GithubIcon from '@/lib/icons/Github'
 import Link from 'next/link'
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { Loader2 } from 'lucide-react'
 import RedAlert from '@/components/origin-ui/alert-red'
 import { signInFormSchema } from '@/lib/utils'
@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { signInWithGitHub } from '../actions'
+import { useSearchParams } from 'next/navigation'
 
 export default function SignInForm() {
   const [{ success, message }, setFormState] = useState<{
@@ -44,16 +45,39 @@ export default function SignInForm() {
     },
   })
 
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const error = searchParams.get('error')
+    if (error) {
+      setFormState({ success: false, message: error })
+    }
+  }, [searchParams])
+
   async function onSubmit(data: z.infer<typeof formSchema>) {
     startTransition(async () => {
-      const state = await SignInWithPassword(data)
+      const state = (await SignInWithPassword(data)) as {
+        success: boolean
+        message: string | null
+        errors: unknown
+      }
 
-      setFormState(
-        state as {
-          success: boolean
-          message: string | null
-        },
-      )
+      setFormState({ success: state.success, message: state.message })
+
+      if (
+        state?.errors &&
+        typeof state.errors === 'object' &&
+        !Array.isArray(state.errors)
+      ) {
+        const entries = Object.entries(state.errors as Record<string, unknown>)
+        for (const [field, messages] of entries) {
+          const messageText = Array.isArray(messages)
+            ? String(messages[0])
+            : String(messages ?? '')
+          // @ts-expect-error dynamic field mapping from server
+          form.setError(field, { type: 'server', message: messageText })
+        }
+      }
 
       if (state.success) {
         form.reset()
@@ -122,8 +146,6 @@ export default function SignInForm() {
         <GithubIcon />
         Entrar com GitHub
       </Button>
-
-      <Separator />
 
       <Button
         variant="link"

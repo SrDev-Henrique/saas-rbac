@@ -35,14 +35,20 @@ export async function SignInWithPassword(
     })
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const data = (await err.response.json().catch(() => ({}))) as any
+      const message = data?.message ?? 'Erro ao fazer login'
+      const errors = data?.errors ?? null
 
-      return { success: false, message, errors: null }
+      return { success: false, message, errors }
     }
 
     console.error(err)
 
-    return { success: false, message: 'Erro ao fazer login', errors: null }
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : 'Erro ao fazer login',
+      errors: null,
+    }
   }
 
   redirect('/')

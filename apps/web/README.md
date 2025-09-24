@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Web App (Next.js)
+
+Frontend for the SaaS + RBAC starter. Built with Next.js App Router (15), React 19, Radix UI, React Hook Form, Zod and Ky.
+
+For a full overview of the project, features, and setup, see the root README.
 
 ## Getting Started
 
-First, run the development server:
+You can run only the web app:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm --filter web dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or run web and API together from the repo root:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Web runs at `http://localhost:3000`
+- API runs at `http://localhost:3333` (configurable via `SERVER_PORT` in root `.env`)
 
-## Learn More
+## Environment
 
-To learn more about Next.js, take a look at the following resources:
+This app relies on the root `.env` used by the API (validated in `packages/_env`). No extra env variables are required for the web app by default.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+GitHub OAuth callback must be set to:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+http://localhost:3000/api/auth/callback
+```
 
-## Deploy on Vercel
+## Authentication flows
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Email & password sign‑in and sign‑up (JWT stored in `token` cookie)
+- GitHub OAuth sign‑in (redirect to GitHub, callback handled at `/api/auth/callback`)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Error handling (client side)
+
+- Ky is configured with `throwHttpErrors: true` and attaches `Authorization` from `token` cookie
+- Server actions catch backend errors and return `{ success, message, errors }`
+- Forms display a global error banner (backend `message` or `?error=...` query)
+- Field‑level errors from backend `errors` are mapped to inputs with `react-hook-form`
+
+## Scripts
+
+From `apps/web`:
+
+- `pnpm dev` — start Next.js (Turbopack)
+- `pnpm build` — build (Turbopack)
+- `pnpm start` — start production build

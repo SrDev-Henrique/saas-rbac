@@ -1,12 +1,13 @@
 import { getUser } from '@/auth/auth'
 import CardAvatar from '@/components/card-avatar'
+import DeleteUserButton from '@/components/delete-user-button'
 import SignOutButton from '@/components/sign-out-button'
 
 export default async function Home() {
   const user = await getUser()
 
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-12">
       <div className="border-accent-foreground/15 rounded-3xl border p-3">
         <CardAvatar
           avatarUrl={user.avatarUrl}
@@ -14,7 +15,10 @@ export default async function Home() {
           email={user.email}
         />
       </div>
-      <SignOutButton />
+      <div className="flex flex-col gap-4">
+        <SignOutButton />
+        <DeleteUserButton id={user.id} />
+      </div>
     </div>
   )
 }
