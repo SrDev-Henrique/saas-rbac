@@ -1,6 +1,6 @@
 import { CircleAlertIcon } from 'lucide-react'
 
-export default function Component({
+export default function AlertList({
   message,
   list,
 }: {
@@ -16,9 +16,7 @@ export default function Component({
           aria-hidden="true"
         />
         <div className="grow space-y-1">
-          <p className="text-sm font-medium">
-            {message}
-          </p>
+          <p className="text-sm font-medium">{message}</p>
           <ul className="list-inside list-disc text-sm opacity-80">
             {list.map((item) => (
               <li key={item}>{item}</li>
