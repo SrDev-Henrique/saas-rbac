@@ -1,83 +1,161 @@
 # Next.js SaaS + RBAC
 
-This project contains all the necessary boilerplate to setup a multi-tenant SaaS with Next.js including authentication and RBAC authorization.
+Full‑stack multi‑tenant SaaS starter with authentication, organizations, projects, invites, members, billing and role‑based access control (RBAC). Built with Next.js App Router, Fastify, Prisma, Zod and TypeScript.
 
-## Features
+## Monorepo structure
+
+- `apps/web`: Next.js 15 app (React 19) — UI, forms, auth flows
+- `apps/api`: Fastify API — auth, orgs, projects, invites, members, billing
+- `packages/_env`: Shared runtime env schema (validated with Zod)
+
+## Tech stack
+
+- Web: Next.js 15, React 19, Radix UI, React Hook Form, Zod, Ky
+- API: Fastify 5, Prisma, Zod, JWT, Swagger UI, bcryptjs
+- Tooling: Turborepo, TypeScript, ESLint, Prettier, pnpm
+
+## What works today
 
 ### Authentication
 
-- [x] It should be able to authenticate using e-mail & password;
-- [x] It should be able to authenticate using Github account;
-- [x] It should be able to recover password using e-mail;
-- [x] It should be able to create an account (e-mail, name and password);
+- Email & password sign‑in and sign‑up (JWT stored in `token` cookie)
+- GitHub OAuth sign‑in (callback at `/api/auth/callback` on web)
+- Password recovery endpoints (request + reset) on the API
+- Delete user endpoint and UI button
 
-### Organizations
+Error handling on the web:
 
-- [x] It should be able to create a new organization;
-- [x] It should be able to get organizations to which the user belongs;
-- [ ] It should be able to update an organization;
-- [ ] It should be able to shutdown an organization;
-- [ ] It should be able to transfer organization ownership;
+- Global error banner shows backend `message` or `?error=...` query (e.g., GitHub failures)
+- Field‑level errors from backend `errors` map to inputs via `react-hook-form`
 
-### Invites
+### Organizations (API)
 
-- [ ] It should be able to invite a new member (e-mail, role);
-- [ ] It should be able to accept an invite;
-- [ ] It should be able to revoke a pending invite;
+- Create organization
+- Get organizations for current user and membership details
+- Get organization by id
+- Update organization
+- Shutdown organization
+- Transfer ownership
 
-### Members
+### Projects (API)
 
-- [ ] It should be able to get organization members;
-- [ ] It should be able to update a member role;
+- Create, list, get, update and delete projects
 
-### Projects
+### Members (API)
 
-- [ ] It should be able to get projects within a organization;
-- [ ] It should be able to create a new project (name, url, description);
-- [ ] It should be able to update a project (name, url, description);
-- [ ] It should be able to delete a project;
+- List members, update member role, remove member
 
-### Billing
+### Invites (API)
 
-- [ ] It should be able to get billing details for organization ($20 per project / $10 per member excluding billing role);
+- Create invite, list invites, get invite details
+- Accept, reject and revoke invites
+- List pending invites
+
+### Billing (API)
+
+- Get organization billing details
+
+### API Docs
+
+- Swagger UI available at `http://localhost:<SERVER_PORT>/docs`
 
 ## RBAC
 
-Roles & permissions.
+Roles supported: Owner, Administrator, Member, Billing, Anonymous.
 
-### Roles
+High‑level permissions (examples):
 
-- Owner (count as administrator)
-- Administrator
-- Member
-- Billing (one per organization)
-- Anonymous
+|                        | Administrator | Member | Billing | Anonymous |
+| ---------------------- | ------------- | ------ | ------- | --------- |
+| Update organization    | ✅            | ❌     | ❌      | ❌        |
+| Delete organization    | ✅            | ❌     | ❌      | ❌        |
+| Invite a member        | ✅            | ❌     | ❌      | ❌        |
+| Revoke an invite       | ✅            | ❌     | ❌      | ❌        |
+| List members           | ✅            | ✅     | ✅      | ❌        |
+| Transfer ownership     | ⚠️            | ❌     | ❌      | ❌        |
+| Update member role     | ✅            | ❌     | ❌      | ❌        |
+| Delete member          | ✅            | ⚠️     | ❌      | ❌        |
+| List projects          | ✅            | ✅     | ✅      | ❌        |
+| Create a new project   | ✅            | ✅     | ❌      | ❌        |
+| Update a project       | ✅            | ⚠️     | ❌      | ❌        |
+| Delete a project       | ✅            | ⚠️     | ❌      | ❌        |
+| Get billing details    | ✅            | ❌     | ✅      | ❌        |
+| Export billing details | ✅            | ❌     | ✅      | ❌        |
 
-### Permissions table
+Notes:
 
-|                          | Administrator | Member | Billing | Anonymous |
-| ------------------------ | ------------- | ------ | ------- | --------- |
-| Update organization      | ✅            | ❌     | ❌      | ❌        |
-| Delete organization      | ✅            | ❌     | ❌      | ❌        |
-| Invite a member          | ✅            | ❌     | ❌      | ❌        |
-| Revoke an invite         | ✅            | ❌     | ❌      | ❌        |
-| List members             | ✅            | ✅     | ✅      | ❌        |
-| Transfer ownership       | ⚠️            | ❌     | ❌      | ❌        |
-| Update member role       | ✅            | ❌     | ❌      | ❌        |
-| Delete member            | ✅            | ⚠️     | ❌      | ❌        |
-| List projects            | ✅            | ✅     | ✅      | ❌        |
-| Create a new project     | ✅            | ✅     | ❌      | ❌        |
-| Update a project         | ✅            | ⚠️     | ❌      | ❌        |
-| Delete a project         | ✅            | ⚠️     | ❌      | ❌        |
-| Get billing details      | ✅            | ❌     | ✅      | ❌        |
-| Export billing details   | ✅            | ❌     | ✅      | ❌        |
+- Only owners may transfer organization ownership
+- Only administrators and project authors may update/delete a project
+- Members can leave their own organization
 
-> ✅ = allowed
-> ❌ = not allowed
-> ⚠️ = allowed w/ conditions
+## Getting started
 
-#### Conditions
+Prerequisites:
 
-- Only owners may transfer organization ownership;
-- Only administrators and project authors may update/delete the project;
-- Members can leave their own organization;
+- Node.js >= 18
+- pnpm 9
+- PostgreSQL database (or compatible) for Prisma
+
+1. Install deps
+
+```bash
+pnpm install
+```
+
+2. Create `.env` at repo root (used by API via `packages/_env`):
+
+```bash
+SERVER_PORT=3333
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/saas_rbac?schema=public"
+JWT_SECRET="your-jwt-secret"
+
+# GitHub OAuth app (set callback to http://localhost:3000/api/auth/callback)
+GITHUB_OAUTH_CLIENT_ID="..."
+GITHUB_OAUTH_CLIENT_SECRET="..."
+GITHUB_OAUTH_REDIRECT_URI="http://localhost:3000/api/auth/callback"
+```
+
+3. Run database migrations (API)
+
+```bash
+pnpm --filter @saas/api db:migrate
+# optional
+pnpm --filter @saas/api db:studio
+```
+
+4. Start dev servers (web + api)
+
+```bash
+pnpm dev
+```
+
+Web: `http://localhost:3000`
+
+API: `http://localhost:3333` (configurable via `SERVER_PORT`) and Docs at `/docs`
+
+## Developer notes
+
+- Web auth client uses Ky with `throwHttpErrors: true` and reads JWT from `token` cookie
+- Server actions normalize backend errors to `{ success, message, errors }`
+- Forms map `errors` keys to fields and show `message` in a banner
+- GitHub OAuth errors are redirected back to `/sign-in?error=...`
+
+## Scripts
+
+Root:
+
+- `pnpm dev` — run all apps in dev via Turborepo
+- `pnpm build` — build all
+- `pnpm lint` — lint all
+- `pnpm check-types` — type‑check all
+
+API:
+
+- `pnpm --filter @saas/api dev` — start API
+- `pnpm --filter @saas/api db:migrate` — prisma migrate
+- `pnpm --filter @saas/api db:studio` — prisma studio
+
+Web:
+
+- `pnpm --filter web dev` — start Next.js
+- `pnpm --filter web build` — build Next.js

@@ -33,14 +33,15 @@ import { updateProject } from './routes/projects/update-project'
 import { getMembers } from './routes/members/get-members'
 import { updateMember } from './routes/members/update-member'
 import { removeMember } from './routes/members/remove-member'
-import { createInvite } from "./routes/invites/create-invite"
-import { getInviteDetails } from "./routes/invites/get-invite-details"
-import { getInvites } from "./routes/invites/get-invites"
-import { acceptInvite } from "./routes/invites/accept-invite"
-import { rejectInvite } from "./routes/invites/reject-invite"
-import { revokeInvite } from "./routes/invites/revoke-invite"
-import { getPendingInvites } from "./routes/invites/get-pending-invites"
-import { getOrganizationBilling } from "./routes/billing/get-organization-billing"
+import { createInvite } from './routes/invites/create-invite'
+import { getInviteDetails } from './routes/invites/get-invite-details'
+import { getInvites } from './routes/invites/get-invites'
+import { acceptInvite } from './routes/invites/accept-invite'
+import { rejectInvite } from './routes/invites/reject-invite'
+import { revokeInvite } from './routes/invites/revoke-invite'
+import { getPendingInvites } from './routes/invites/get-pending-invites'
+import { getOrganizationBilling } from './routes/billing/get-organization-billing'
+import { deleteUser } from './routes/auth/delete-user'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -86,6 +87,7 @@ app.register(authenticateWithPassword)
 app.register(authenticateWithGithub)
 app.register(resetPassword)
 app.register(requestPasswordRecover)
+app.register(deleteUser)
 
 app.register(getMembership)
 
