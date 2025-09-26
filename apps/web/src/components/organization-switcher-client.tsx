@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/select'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { PlusIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 interface Organizations {
   role: 'ADMIN' | 'MEMBER' | 'BILLING'
@@ -30,10 +30,15 @@ export default function OrganizationSwitcherClient({
 }) {
   const router = useRouter()
 
+  const pathname = usePathname()
+
+  const parts = pathname.split('/')
+  const slug = parts[2] ?? ''
+
   return (
     <div className="*:not-first:mt-2">
       <Select
-        defaultValue=""
+        defaultValue={slug}
         onValueChange={(value) => {
           if (value === 'create-organization') {
             router.push('/org/create')
@@ -54,13 +59,13 @@ export default function OrganizationSwitcherClient({
               </SelectLabel>
               {organizations.map((org) => (
                 <SelectItem key={org.id} value={org.slug}>
-                  <Avatar>
+                  <Avatar className="size-6">
                     <AvatarImage src={org.avatarUrl ?? ''} alt={org.name} />
                     <AvatarFallback>
                       {org.name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="line-clamp-1 truncate">{org.name}</span>
+                  <span className="truncate text-sm">{org.name}</span>
                 </SelectItem>
               ))}
             </SelectGroup>

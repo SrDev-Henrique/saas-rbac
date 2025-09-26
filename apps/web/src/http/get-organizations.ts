@@ -15,7 +15,5 @@ export async function getOrganizations() {
     .get('organizations')
     .json<GetOrganizationsResponse>()
 
-  console.log(response)
-
   return response
 }
