@@ -22,6 +22,7 @@ export async function getMembership(app: FastifyInstance) {
               membership: z.object({
                 id: z.uuid(),
                 role: z.enum(['ADMIN', 'MEMBER', 'BILLING']),
+                userId: z.uuid(),
                 organizationId: z.uuid(),
               }),
             }),
@@ -36,6 +37,7 @@ export async function getMembership(app: FastifyInstance) {
           membership: {
             id: membership.id,
             role: membership.role,
+            userId: membership.userId,
             organizationId: membership.organizationId,
           },
         }
