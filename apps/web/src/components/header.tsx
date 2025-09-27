@@ -3,12 +3,14 @@ import AvatarProfile from './origin-ui/avatar-profile'
 import OrganizationSwitcher from './origin-ui/organization-switcher'
 import { Slash } from 'lucide-react'
 import { ability } from '@/auth/auth'
+import ThemeSwitcher from './origin-ui/theme-switcher'
+import { Separator } from './ui/separator'
 
 export default async function Header({ slug }: { slug?: string }) {
   const permissions = await ability({ slug: slug ?? '' })
 
   return (
-    <div className="mx-auto flex max-w-[1200px] items-center justify-between">
+    <div className="mx-auto flex max-w-[1200px] items-center justify-between px-4 xl:px-0">
       <div className="flex cursor-pointer items-center gap-3">
         <Image src="/images/logo.png" alt="Logo" width={32} height={32} />
 
@@ -22,6 +24,10 @@ export default async function Header({ slug }: { slug?: string }) {
       </div>
 
       <div className="flex items-center gap-4">
+        <ThemeSwitcher />
+
+        <Separator orientation="vertical" />
+
         <AvatarProfile />
       </div>
     </div>
