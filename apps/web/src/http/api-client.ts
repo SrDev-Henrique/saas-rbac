@@ -1,9 +1,10 @@
+import { env } from "@saas/env"
 import ky from 'ky'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export const api = ky.create({
-  prefixUrl: 'http://localhost:3333',
+  prefixUrl: env.NEXT_PUBLIC_API_URL,
   hooks: {
     beforeRequest: [
       async (request) => {
