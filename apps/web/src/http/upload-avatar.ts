@@ -8,6 +8,29 @@ type UploadAvatarResponse = {
   avatarUrl: string
 }
 
+function sanitizeFilename(input: string): string {
+  const lastDotIndex = input.lastIndexOf('.')
+  const hasExtension = lastDotIndex > 0 && lastDotIndex < input.length - 1
+
+  let base = hasExtension ? input.slice(0, lastDotIndex) : input
+  let ext = hasExtension ? input.slice(lastDotIndex + 1) : ''
+
+  // Remove diacritics
+  base = base.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  ext = ext.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+  // Replace illegal characters
+  base = base.replace(/[^a-zA-Z0-9_-]+/g, '-')
+  ext = ext.replace(/[^a-zA-Z0-9]+/g, '')
+
+  // Collapse and trim dashes
+  base = base.replace(/-+/g, '-').replace(/^-+|-+$/g, '')
+
+  if (!base) base = 'file'
+
+  return ext ? `${base}.${ext}` : base
+}
+
 export async function uploadAvatar({
   file,
 }: UploadAvatarRequest): Promise<UploadAvatarResponse> {
@@ -16,7 +39,8 @@ export async function uploadAvatar({
     throw new Error('NEXT_PUBLIC_API_URL is not set')
   }
   const formData = new FormData()
-  formData.append('file', file, file.name)
+  const sanitizedName = sanitizeFilename(file.name)
+  formData.append('file', file, sanitizedName)
 
   const res = await fetch(`${apiBase}/upload-avatar`, {
     method: 'POST',
