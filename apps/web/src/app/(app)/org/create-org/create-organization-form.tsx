@@ -47,6 +47,8 @@ export default function CreateOrganizationForm() {
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
 
+  const [removeAvatarFile, setRemoveAvatarFile] = useState(false)
+
   const [isPending, startTransition] = useTransition()
 
   const searchParams = useSearchParams()
@@ -110,6 +112,8 @@ export default function CreateOrganizationForm() {
         if (state.success) {
           form.reset()
           setAvatarFile(null)
+          setRemoveAvatarFile(true)
+          setTimeout(() => setRemoveAvatarFile(false), 50)
         }
       } catch (err: any) {
         setFormState({
@@ -166,6 +170,7 @@ export default function CreateOrganizationForm() {
                     onChange={(preview) => field.onChange(preview)}
                     onFileSelected={(file) => setAvatarFile(file)}
                     accept="image/*"
+                    removeFile={removeAvatarFile}
                   />
                 </FormControl>
                 <FormMessage />

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { CircleUserRoundIcon } from 'lucide-react'
 import { useFileUpload } from '@/hooks/use-file-upload'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,7 @@ type Props = {
   value?: string | null
   onChange?: (v: string | null) => void
   onFileSelected?: (file: File | null) => void
+  removeFile?: boolean
   accept?: string
 }
 
@@ -17,6 +18,7 @@ export default function FileUploaderField({
   onChange,
   onFileSelected,
   accept = 'image/*',
+  removeFile = false,
 }: Props) {
   const [state, actions] = useFileUpload({
     accept,
@@ -33,6 +35,14 @@ export default function FileUploaderField({
       : [],
     maxSize: 1024 * 1024 * 1, // 1MB
   })
+
+  useEffect(() => {
+    if (removeFile && state.files.length > 0) {
+      state.files.slice().forEach((f) => {
+        actions.removeFile(f.id)
+      })
+    }
+  }, [removeFile, state.files, actions])
 
   const previewUrl = state.files[0]?.preview ?? null
   const fileName =
@@ -54,7 +64,19 @@ export default function FileUploaderField({
       onChange?.(null)
       onFileSelected?.(null)
     }
-  }, [state.files])
+
+    return () => {
+      const fileEntry = state.files[0]
+      if (fileEntry && fileEntry.file instanceof File) {
+        try {
+          const url = fileEntry.preview
+          if (url && url.startsWith('blob:')) {
+            URL.revokeObjectURL(url)
+          }
+        } catch {}
+      }
+    }
+  }, [state.files, onChange, onFileSelected])
 
   return (
     <div className="mt-2 mb-2 flex flex-col items-start gap-2">
