@@ -1,6 +1,6 @@
 import { CircleCheckIcon } from 'lucide-react'
 
-export default function EmeraldAlert({text}: {text: string}) {
+export default function EmeraldAlert({ text }: { text: string }) {
   return (
     <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
       <p className="text-sm">

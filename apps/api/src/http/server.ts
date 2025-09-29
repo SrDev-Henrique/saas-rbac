@@ -42,6 +42,8 @@ import { revokeInvite } from './routes/invites/revoke-invite'
 import { getPendingInvites } from './routes/invites/get-pending-invites'
 import { getOrganizationBilling } from './routes/billing/get-organization-billing'
 import { deleteUser } from './routes/auth/delete-user'
+import { uploadAvatar } from './routes/avatar/upload-avatar'
+import fastifyMultipart from '@fastify/multipart'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -80,7 +82,18 @@ app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 })
 
-app.register(fastiyCors)
+app.register(fastifyMultipart, {
+  limits: {
+    fileSize: 5 * 1024 * 1024, // limite 5MB (ajusta se quiser)
+  },
+})
+
+app.register(fastiyCors, {
+  origin: true, // reflect request origin
+  credentials: true,
+  methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+})
 app.register(createAccount)
 app.register(getProfile)
 app.register(authenticateWithPassword)
@@ -117,6 +130,8 @@ app.register(revokeInvite)
 app.register(getPendingInvites)
 
 app.register(getOrganizationBilling)
+
+app.register(uploadAvatar)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log(`HTTP server running on port ${env.SERVER_PORT}`)

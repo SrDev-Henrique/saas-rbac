@@ -41,7 +41,7 @@ export default function OrganizationSwitcherClient({
         defaultValue={slug}
         onValueChange={(value) => {
           if (value === 'create-organization') {
-            router.push('/org/create')
+            router.push('/org/create-org')
           } else if (value !== 'no-organization') {
             router.push(`/org/${value}`)
           }
@@ -79,7 +79,7 @@ export default function OrganizationSwitcherClient({
 
           <SelectSeparator />
           <SelectGroup>
-            <SelectItem value="create-organization">
+            <SelectItem value="create-org">
               <PlusIcon /> Criar nova organização
             </SelectItem>
           </SelectGroup>

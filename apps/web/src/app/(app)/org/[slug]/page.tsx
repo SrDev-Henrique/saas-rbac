@@ -8,7 +8,7 @@ export default async function Projects({
 }) {
   const currentOrganization = getCurrentOrganization({ params })
   return (
-    <div className="py-4">
+    <div className="space-y-4 p-4 xl:px-0">
       <Header slug={params.slug} />
       <main>{currentOrganization}</main>
     </div>
