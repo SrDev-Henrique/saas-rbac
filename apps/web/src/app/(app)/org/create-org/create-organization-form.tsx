@@ -27,7 +27,7 @@ import EmeraldAlert from '@/components/origin-ui/alert-emerald'
 export default function CreateOrganizationForm() {
   const formSchema = createOrganizationSchema
 
-  const form = useForm<z.infer<typeof createOrganizationSchema>>({
+  const form = useForm<z.input<typeof createOrganizationSchema>>({
     resolver: zodResolver(createOrganizationSchema),
     defaultValues: {
       name: '',
@@ -60,7 +60,7 @@ export default function CreateOrganizationForm() {
     }
   }, [searchParams])
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.input<typeof formSchema>) {
     startTransition(async () => {
       try {
         let avatarUrl: string | null = null
