@@ -3,6 +3,7 @@ import { FastifyInstance } from 'fastify'
 import { BadRequestError } from '../_errors/bad-request-error'
 import { randomUUID } from 'crypto'
 import { supabaseAdmin } from '@/server/supabase-server'
+import { prisma } from '@/lib/prisma'
 
 export async function uploadAvatar(app: FastifyInstance) {
   app.register(auth).post(
@@ -13,6 +14,16 @@ export async function uploadAvatar(app: FastifyInstance) {
     async (request, reply) => {
       try {
         const userId = await request.getCurrentUserId()
+
+        const user = await prisma.user.findUnique({
+          where: {
+            id: userId,
+          },
+        })
+
+        if (!user) {
+          throw new BadRequestError('Usuário não encontrado')
+        }
 
         const mp = await (request as any).file({
           limits: { fileSize: 5 * 1024 * 1024 },
@@ -27,7 +38,7 @@ export async function uploadAvatar(app: FastifyInstance) {
         }
 
         const filename = mp.filename ?? `avatar-${Date.now()}`
-        const key = `avatar/${userId}/${randomUUID()}-${filename}`
+        const key = `avatar/${user.name ?? user.email}/${randomUUID()}-${filename}`
 
         const buffer = await mp.toBuffer()
 

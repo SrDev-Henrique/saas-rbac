@@ -31,7 +31,7 @@ export default function FileUploaderField({
           },
         ]
       : [],
-    maxSize: 1024 * 1024 * 5, // 5MB
+    maxSize: 1024 * 1024 * 1, // 1MB
   })
 
   const previewUrl = state.files[0]?.preview ?? null
@@ -62,14 +62,16 @@ export default function FileUploaderField({
         <div
           className="border-input relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-md border"
           aria-label={
-            previewUrl ? 'Preview of uploaded image' : 'Default user avatar'
+            previewUrl
+              ? 'Preview da imagem carregada'
+              : 'Avatar padrão do usuário'
           }
         >
           {previewUrl ? (
             <img
               className="size-full object-cover"
               src={previewUrl}
-              alt="Preview of uploaded image"
+              alt="Preview da imagem carregada"
               width={32}
               height={32}
             />
@@ -92,7 +94,7 @@ export default function FileUploaderField({
           <input
             {...actions.getInputProps()}
             className="sr-only"
-            aria-label="Upload image file"
+            aria-label="Upload de arquivo de imagem"
             tabIndex={-1}
           />
         </div>
@@ -107,7 +109,7 @@ export default function FileUploaderField({
             type="button"
             onClick={() => actions.removeFile(state.files[0]?.id)}
             className="text-destructive font-medium hover:underline"
-            aria-label={`Remove ${fileName}`}
+            aria-label={`Remover ${fileName}`}
           >
             Remover
           </button>
@@ -119,7 +121,7 @@ export default function FileUploaderField({
         role="region"
         className="text-muted-foreground mt-2 text-xs"
       >
-        Carregue a imagem da sua organização.
+        Carregue a imagem da sua organização. (Tamanho máximo de 1MB.)
       </p>
     </div>
   )
