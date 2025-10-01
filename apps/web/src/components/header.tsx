@@ -6,6 +6,7 @@ import { ability } from '@/auth/auth'
 import ThemeSwitcher from './origin-ui/theme-switcher'
 import { Separator } from './ui/separator'
 import Link from 'next/link'
+import ProjectsSwitcher from './projects-switcher'
 
 export default async function Header({ slug }: { slug?: string }) {
   const permissions = await ability({ slug: slug ?? '' })
@@ -21,9 +22,12 @@ export default async function Header({ slug }: { slug?: string }) {
 
         <OrganizationSwitcher />
 
-        <Slash className="text-muted-foreground size-3 -rotate-[24deg]" />
-
-        {permissions?.can('get', 'Project') && <p>Projects</p>}
+        {permissions?.can('get', 'Project') && (
+          <>
+            <Slash className="text-muted-foreground size-3 -rotate-[24deg]" />
+            <ProjectsSwitcher />
+          </>
+        )}
       </div>
 
       <div className="flex items-center gap-4">
