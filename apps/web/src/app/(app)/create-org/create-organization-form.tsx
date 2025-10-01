@@ -124,7 +124,7 @@ export default function CreateOrganizationForm() {
     })
   }
   return (
-    <div className="mx-auto max-w-sm">
+    <div className="mx-auto max-w-sm px-3">
       <Form {...form}>
         {success === false && message && <RedAlert text={message} />}
         {success === true && message && <EmeraldAlert text={message} />}

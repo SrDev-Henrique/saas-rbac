@@ -143,7 +143,7 @@ export default function FileUploaderField({
         role="region"
         className="text-muted-foreground mt-2 text-xs"
       >
-        Carregue a imagem da sua organização. (Tamanho máximo de 1MB.)
+        Carregue a imagem da sua organização. (Máx. 1MB)
       </p>
     </div>
   )

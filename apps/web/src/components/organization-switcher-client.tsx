@@ -35,14 +35,16 @@ export default function OrganizationSwitcherClient({
   const parts = pathname.split('/')
   const slug = parts[2] ?? ''
 
+  const createOrg = parts[1] === 'create-org'
+
   return (
     <div className="*:not-first:mt-2">
       <Select
-        defaultValue={slug}
+        defaultValue={createOrg ? 'create-org' : slug}
         onValueChange={(value) => {
-          if (value === 'create-organization') {
-            router.push('/org/create-org')
-          } else if (value !== 'no-organization') {
+          if (value === 'create-org') {
+            router.push('/create-org')
+          } else if (value !== 'create-organization') {
             router.push(`/org/${value}`)
           }
         }}
