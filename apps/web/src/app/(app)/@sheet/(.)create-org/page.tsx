@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Sheet,
   SheetContent,
@@ -5,10 +7,17 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import CreateOrganizationForm from '../../create-org/create-organization-form'
+import { useRouter } from 'next/navigation'
 
 export default function CreateOrganizationPage() {
+  const router = useRouter()
   return (
-    <Sheet defaultOpen>
+    <Sheet
+      defaultOpen
+      onOpenChange={(open: boolean) => {
+        if (!open) router.back()
+      }}
+    >
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Criar Organização</SheetTitle>

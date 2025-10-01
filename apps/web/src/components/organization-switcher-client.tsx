@@ -1,4 +1,3 @@
-// app/components/OrganizationSwitcher.client.tsx
 'use client'
 
 import {
@@ -29,22 +28,37 @@ export default function OrganizationSwitcherClient({
   organizations: Organizations[]
 }) {
   const router = useRouter()
-
-  const pathname = usePathname()
+  const pathname = usePathname() ?? '/'
 
   const parts = pathname.split('/')
   const slug = parts[2] ?? ''
 
   const createOrg = parts[1] === 'create-org'
 
+  const isRoot = pathname === '/' || pathname === ''
+
+  const currentValue = createOrg
+    ? 'create-org'
+    : slug
+      ? slug
+      : isRoot
+        ? 'select-org'
+        : organizations.length > 0
+          ? organizations[0].slug
+          : 'no-organization'
+
   return (
     <div className="*:not-first:mt-2">
       <Select
-        defaultValue={createOrg ? 'create-org' : slug}
+        value={currentValue}
         onValueChange={(value) => {
+          if (value === 'select-org') return
+
           if (value === 'create-org') {
             router.push('/create-org')
-          } else if (value !== 'create-organization') {
+          } else if (value === 'no-organization') {
+            return
+          } else {
             router.push(`/org/${value}`)
           }
         }}
@@ -54,6 +68,12 @@ export default function OrganizationSwitcherClient({
         </SelectTrigger>
 
         <SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2">
+          <SelectGroup>
+            <SelectItem className="hidden" value="select-org" disabled>
+              Selecione uma organização
+            </SelectItem>
+          </SelectGroup>
+
           {organizations.length > 0 ? (
             <SelectGroup>
               <SelectLabel className="ps-2">

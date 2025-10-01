@@ -6,10 +6,11 @@ export default async function Projects({
 }: {
   params: { slug: string }
 }) {
-  const currentOrganization = getCurrentOrganization({ params })
+  const awaitedParams = await params
+  const currentOrganization = getCurrentOrganization({ params: awaitedParams })
   return (
     <div className="space-y-4 p-4 xl:px-0">
-      <Header slug={params.slug} />
+      <Header slug={awaitedParams.slug} />
       <main>{currentOrganization}</main>
     </div>
   )
