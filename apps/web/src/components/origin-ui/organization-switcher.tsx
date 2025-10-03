@@ -1,12 +1,9 @@
-import { getOrganizations } from '@/http/get-organizations'
 import OrganizationSwitcherClient from '../organization-switcher-client'
 
-export default async function OrganizationSwitcher() {
-  const { organizations } = await getOrganizations()
-
+export default function OrganizationSwitcher() {
   return (
     <div>
-      <OrganizationSwitcherClient organizations={organizations} />
+      <OrganizationSwitcherClient />
     </div>
   )
 }

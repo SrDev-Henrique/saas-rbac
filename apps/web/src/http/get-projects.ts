@@ -17,6 +17,8 @@ export interface GetProjectsResponse {
 }
 
 export async function getProjects(slug: string) {
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  
   const res = await fetch(`/api/organizations/${slug}/projects`, {
     method: 'GET',
     credentials: 'include',

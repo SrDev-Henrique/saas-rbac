@@ -1,5 +1,4 @@
-import { Role } from "@saas/auth"
-import { api } from './api-client'
+import { Role } from '@saas/auth'
 
 interface GetOrganizationsResponse {
   organizations: {
@@ -12,9 +11,19 @@ interface GetOrganizationsResponse {
 }
 
 export async function getOrganizations() {
-  const response = await api
-    .get('organizations')
-    .json<GetOrganizationsResponse>()
+  const res = await fetch('/api/organizations', {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
 
-  return response
+  if (!res.ok) {
+    throw new Error('Failed to fetch organizations')
+  }
+
+  const data = (await res.json()) as GetOrganizationsResponse
+
+  return data
 }
