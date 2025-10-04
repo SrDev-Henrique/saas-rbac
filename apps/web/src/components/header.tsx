@@ -8,7 +8,13 @@ import { Separator } from './ui/separator'
 import Link from 'next/link'
 import ProjectsSwitcher from './projects-switcher'
 
-export default async function Header({ slug }: { slug?: string }) {
+export default async function Header({
+  slug,
+  canGetProjects,
+}: {
+  slug?: string
+  canGetProjects?: boolean
+}) {
   const permissions = await ability({ slug: slug ?? '' })
 
   return (
@@ -22,7 +28,7 @@ export default async function Header({ slug }: { slug?: string }) {
 
         <OrganizationSwitcher />
 
-        {permissions?.can('get', 'Project') && (
+        {(permissions?.can('get', 'Project') || canGetProjects) && (
           <>
             <Slash className="text-muted-foreground size-3 -rotate-[24deg]" />
             <ProjectsSwitcher />

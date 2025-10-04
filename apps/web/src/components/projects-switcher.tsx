@@ -68,7 +68,7 @@ export default function ProjectsSwitcher() {
             if (value === 'select-project') return
 
             if (value === 'create-project') {
-              router.push('/create-project')
+              router.push(`/org/${orgSlug}/create-project`)
             } else if (value === 'no-project') {
               return
             } else {
