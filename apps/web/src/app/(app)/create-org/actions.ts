@@ -3,7 +3,6 @@
 import z from 'zod'
 import { createOrganizationSchema } from './schema'
 import { HTTPError } from 'ky'
-import { redirect } from 'next/navigation'
 import { createOrganization } from '@/http/create-organization'
 
 export async function createOrganizationAction(

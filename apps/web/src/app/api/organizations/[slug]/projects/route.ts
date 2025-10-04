@@ -8,7 +8,10 @@ export async function GET(
   const cookieStore = await cookies()
   const token = cookieStore.get('token')?.value
 
-  const backendUrl = `http://localhost:3333/organizations/${params.slug}/projects`
+  const awaitedParams = await params
+  const { slug } = awaitedParams
+
+  const backendUrl = `http://localhost:3333/organizations/${slug}/projects`
 
   const res = await fetch(backendUrl, {
     method: 'GET',

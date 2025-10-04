@@ -23,6 +23,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import FileUploaderField from '@/components/origin-ui/file-uploader'
 import { uploadAvatar } from '@/lib/upload-avatar'
 import EmeraldAlert from '@/components/origin-ui/alert-emerald'
+import { queryClient } from '@/lib/react-query'
 
 export default function CreateOrganizationForm() {
   const formSchema = createOrganizationSchema
@@ -77,9 +78,14 @@ export default function CreateOrganizationForm() {
           avatarUrl = result.avatarUrl
         }
 
+        const normalizedDomain = (() => {
+          const raw = (data.domain ?? '').trim().toLowerCase()
+          return raw.length > 0 ? raw : undefined
+        })()
+
         const payload = {
           name: data.name,
-          domain: data.domain ?? undefined,
+          domain: normalizedDomain,
           shouldAttachUsersByDomain: !!data.shouldAttachUsersByDomain,
           avatarUrl,
         }
@@ -114,6 +120,7 @@ export default function CreateOrganizationForm() {
           setAvatarFile(null)
           setRemoveAvatarFile(true)
           setTimeout(() => setRemoveAvatarFile(false), 50)
+          queryClient.invalidateQueries({ queryKey: ['organizations'] })
         }
       } catch (err: any) {
         setFormState({
