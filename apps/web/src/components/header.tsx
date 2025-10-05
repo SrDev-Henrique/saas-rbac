@@ -39,8 +39,6 @@ export default async function Header({
       <div className="flex items-center gap-4">
         <ThemeSwitcher />
 
-        <Separator orientation="vertical" />
-
         <AvatarProfile />
       </div>
     </div>
