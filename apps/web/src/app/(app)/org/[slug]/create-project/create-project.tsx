@@ -106,7 +106,7 @@ export default function CreateProjectForm() {
     })
   }
   return (
-    <div className="mx-auto max-w-sm px-4">
+    <div className="mx-auto w-full max-w-sm px-4">
       {abilityQuery.data?.can('create', 'Project') ? (
         <Form {...form}>
           {success === false && message && <RedAlert text={message} />}
