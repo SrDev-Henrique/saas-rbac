@@ -22,6 +22,7 @@ import EmeraldAlert from '@/components/origin-ui/alert-emerald'
 import { queryClient } from '@/lib/react-query'
 import { createProjectAction } from './actions'
 import { Textarea } from '@/components/ui/textarea'
+import { useAbility } from '@/hooks/use-ability'
 
 export default function CreateProjectForm() {
   const formSchema = createProjectSchema
@@ -44,8 +45,8 @@ export default function CreateProjectForm() {
 
   const [isPending, startTransition] = useTransition()
 
-    const searchParams = useSearchParams()
-    
+  const searchParams = useSearchParams()
+
   const pathname = usePathname()
 
   const slug = pathname.split('/')[2]
@@ -56,6 +57,8 @@ export default function CreateProjectForm() {
       setFormState({ success: false, message: error })
     }
   }, [searchParams])
+
+  const abilityQuery = useAbility({ slug })
 
   async function onSubmit(data: z.input<typeof formSchema>) {
     startTransition(async () => {
@@ -103,54 +106,58 @@ export default function CreateProjectForm() {
     })
   }
   return (
-      <div className="mx-auto max-w-sm px-4">
-      <Form {...form}>
-        {success === false && message && <RedAlert text={message} />}
-        {success === true && message && <EmeraldAlert text={message} />}
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-4 w-full space-y-4"
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome do projeto</FormLabel>
-                <FormControl>
-                  <Input type="text" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Descrição do projeto</FormLabel>
-                <FormControl>
-                  <Textarea {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button
-            type="submit"
-            className="w-full cursor-pointer"
-            disabled={isPending}
+    <div className="mx-auto max-w-sm px-4">
+      {abilityQuery.data?.can('create', 'Project') ? (
+        <Form {...form}>
+          {success === false && message && <RedAlert text={message} />}
+          {success === true && message && <EmeraldAlert text={message} />}
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mt-4 w-full space-y-4"
           >
-            {isPending ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              'Criar projeto'
-            )}
-          </Button>
-        </form>
-      </Form>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome do projeto</FormLabel>
+                  <FormControl>
+                    <Input type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Descrição do projeto</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={isPending}
+            >
+              {isPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                'Criar projeto'
+              )}
+            </Button>
+          </form>
+        </Form>
+      ) : abilityQuery.isLoading ? null : (
+        <RedAlert text="Você não tem permissão para criar projetos" />
+      )}
     </div>
   )
 }

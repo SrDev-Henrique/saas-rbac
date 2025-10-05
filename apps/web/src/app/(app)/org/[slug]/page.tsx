@@ -1,4 +1,4 @@
-import { getCurrentOrganization } from '@/auth/auth'
+import { getCurrentOrganization } from '@/auth/auth-client'
 import Header from '@/components/header'
 
 export default async function Projects({
