@@ -18,7 +18,7 @@ export default async function Header({
   const permissions = await ability({ slug: slug ?? '' })
 
   return (
-    <div className="mx-auto flex max-w-[1200px] items-center justify-between px-4 xl:px-0">
+    <div className="bg-popover mx-auto flex max-w-[1200px] items-center justify-between rounded-md px-4 py-2">
       <div className="flex cursor-pointer items-center gap-3">
         <Link href="/">
           <Image src="/images/logo.png" alt="Logo" width={32} height={32} />
