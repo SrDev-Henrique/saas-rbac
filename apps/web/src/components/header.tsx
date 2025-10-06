@@ -4,7 +4,6 @@ import OrganizationSwitcher from './origin-ui/organization-switcher'
 import { Slash } from 'lucide-react'
 import { ability } from '@/auth/auth-client'
 import ThemeSwitcher from './origin-ui/theme-switcher'
-import { Separator } from './ui/separator'
 import Link from 'next/link'
 import ProjectsSwitcher from './projects-switcher'
 
