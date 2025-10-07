@@ -28,6 +28,7 @@ export async function createOrganization(app: FastifyInstance) {
             domain: z.string().optional(),
             shouldAttachUsersByDomain: z.boolean().default(false),
             avatarUrl: z.string().nullish(),
+            description: z.string().nullish(),
           }),
         },
       },
@@ -39,6 +40,7 @@ export async function createOrganization(app: FastifyInstance) {
           domain: rawDomain,
           shouldAttachUsersByDomain,
           avatarUrl,
+          description,
         } = request.body
 
         const domain = (() => {
@@ -77,6 +79,7 @@ export async function createOrganization(app: FastifyInstance) {
             domain,
             shouldAttachUsersByDomain,
             avatarUrl,
+            description,
             ownerId: userId,
             members: {
               create: {

@@ -23,6 +23,7 @@ export const createOrganizationSchema = z
       ),
     shouldAttachUsersByDomain: z.boolean().default(false),
     avatarUrl: z.string().nullable(),
+    description: z.string().nullable(),
   })
   .refine(
     (data) => {

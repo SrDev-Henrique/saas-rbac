@@ -1,0 +1,29 @@
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar'
+
+export default function AvatarGroup({ avatarUrls }: { avatarUrls: string[] }) {
+  return (
+    <div className="border-background bg-background dark:bg-secondary flex items-center rounded-full border p-1 shadow-md">
+      <div className="flex -space-x-3">
+        {avatarUrls.slice(0, 4).map((avatarUrl) => (
+          <div key={avatarUrl}>
+            <Avatar>
+              <AvatarImage src={avatarUrl} />
+              <AvatarFallback>
+                {avatarUrl.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+        ))}
+      </div>
+      {avatarUrls.length > 4 && (
+        <Button
+          variant="secondary"
+          className="text-muted-foreground hover:text-foreground flex items-center justify-center rounded-full bg-transparent px-3 text-xs shadow-none hover:bg-transparent"
+        >
+          +{avatarUrls.length - 4}
+        </Button>
+      )}
+    </div>
+  )
+}

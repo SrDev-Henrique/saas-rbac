@@ -16,7 +16,7 @@ export async function createOrganizationAction(
     return { success: false, message: null, errors }
   }
 
-  const { name, domain, shouldAttachUsersByDomain, avatarUrl } = result.data
+  const { name, domain, shouldAttachUsersByDomain, avatarUrl, description } = result.data
 
   try {
     await createOrganization({
@@ -24,6 +24,7 @@ export async function createOrganizationAction(
       domain,
       shouldAttachUsersByDomain,
       avatarUrl,
+      description,
     })
     return {
       success: true,

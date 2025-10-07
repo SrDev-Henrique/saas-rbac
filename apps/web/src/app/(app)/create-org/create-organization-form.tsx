@@ -24,8 +24,14 @@ import FileUploaderField from '@/components/origin-ui/file-uploader'
 import { uploadAvatar } from '@/lib/upload-avatar'
 import EmeraldAlert from '@/components/origin-ui/alert-emerald'
 import { queryClient } from '@/lib/react-query'
+import { Textarea } from '@/components/ui/textarea'
+import { cn } from '@/lib/utils'
 
-export default function CreateOrganizationForm() {
+export default function CreateOrganizationForm({
+  isEditing,
+}: {
+  isEditing: boolean
+}) {
   const formSchema = createOrganizationSchema
 
   const form = useForm<z.input<typeof createOrganizationSchema>>({
@@ -35,6 +41,7 @@ export default function CreateOrganizationForm() {
       domain: '',
       shouldAttachUsersByDomain: false,
       avatarUrl: '',
+      description: '',
     },
   })
 
@@ -88,6 +95,7 @@ export default function CreateOrganizationForm() {
           domain: normalizedDomain,
           shouldAttachUsersByDomain: !!data.shouldAttachUsersByDomain,
           avatarUrl,
+          description: data.description,
         }
 
         const state = (await createOrganizationAction(payload)) as {
@@ -131,7 +139,7 @@ export default function CreateOrganizationForm() {
     })
   }
   return (
-    <div className="mx-auto max-w-sm px-4">
+    <div className={cn('mx-auto max-w-sm px-4', isEditing && 'w-full px-0')}>
       <Form {...form}>
         {success === false && message && <RedAlert text={message} />}
         {success === true && message && <EmeraldAlert text={message} />}
@@ -205,6 +213,19 @@ export default function CreateOrganizationForm() {
             Isso irá adicionar usuários com o mesmo domínio de e-mail da
             organização automaticamente para sua organização ao fazer login.
           </p>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Descrição da organização</FormLabel>
+                <FormControl>
+                  <Textarea {...field} value={field.value ?? ''} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button
             type="submit"
             className="w-full cursor-pointer"
@@ -212,6 +233,8 @@ export default function CreateOrganizationForm() {
           >
             {isPending ? (
               <Loader2 className="size-4 animate-spin" />
+            ) : isEditing ? (
+              'Editar organização'
             ) : (
               'Criar organização'
             )}

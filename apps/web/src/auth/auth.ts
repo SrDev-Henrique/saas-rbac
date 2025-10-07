@@ -5,12 +5,7 @@ import { redirect } from 'next/navigation'
 export async function isAuthenticated() {
   const cookieStore = await cookies()
   const token = cookieStore.get('token')?.value
-
-  if (!token) {
-    return false
-  }
-
-  return true
+  return Boolean(token)
 }
 
 export async function getUser() {
@@ -21,16 +16,9 @@ export async function getUser() {
     redirect('/sign-in')
   }
 
-  console.log('get user', token)
-
   try {
     const { user } = await getProfile()
-
-    console.log('get user', user)
-
     return user
-  } catch (err) {
-    console.error('get user', err)
-  }
+  } catch (_err) {}
   redirect('/api/auth/sign-out')
 }

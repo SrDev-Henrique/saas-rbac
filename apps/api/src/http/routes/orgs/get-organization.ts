@@ -1,4 +1,5 @@
 import { auth } from '@/http/middlewares/auth'
+import { prisma } from '@/lib/prisma'
 import { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
@@ -25,6 +26,7 @@ export async function getOrganization(app: FastifyInstance) {
                 slug: z.string(),
                 domain: z.string().nullable(),
                 shouldAttachUsersByDomain: z.boolean(),
+                description: z.string().nullable(),
                 avatarUrl: z.url().nullable(),
                 createdAt: z.date(),
                 updatedAt: z.date(),

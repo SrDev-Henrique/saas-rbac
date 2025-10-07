@@ -4,6 +4,7 @@ import {
   CreditCardIcon,
   Loader2,
   PanelsTopLeftIcon,
+  SettingsIcon,
   UsersIcon,
 } from 'lucide-react'
 
@@ -81,7 +82,7 @@ export default function NavigationTabs() {
               </Link>
             </TabsTrigger>
           )}
-          {(canGetBilling || canUpdateOrganization) && (
+          {canGetBilling && (
             <TabsTrigger asChild value="billing" className="group">
               <Link href={`/org/${org}/billing`}>
                 <CreditCardIcon
@@ -90,6 +91,18 @@ export default function NavigationTabs() {
                   aria-hidden="true"
                 />
                 Contas
+              </Link>
+            </TabsTrigger>
+          )}
+          {canUpdateOrganization && (
+            <TabsTrigger asChild value="settings" className="group">
+              <Link href={`/org/${org}/settings`}>
+                <SettingsIcon
+                  className="-ms-0.5 me-1.5 opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                Configurações
               </Link>
             </TabsTrigger>
           )}

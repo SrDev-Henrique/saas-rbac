@@ -103,6 +103,7 @@ model Organization {
   domain String? @unique
   shouldAttachUsersByDomain Boolean @default(false) @map("should_attach_users_by_domain")
   avatarUrl String? @map("avatar_url")
+  description String? @map("description")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
