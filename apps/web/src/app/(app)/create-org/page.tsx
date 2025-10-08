@@ -1,5 +1,5 @@
 import Header from '@/components/header'
-import CreateOrganizationForm from './create-organization-form'
+import OrganizationForm from '../org/organization-form'
 
 export default function CreateOrganizationPage() {
   return (
@@ -9,7 +9,7 @@ export default function CreateOrganizationPage() {
         <h1>Criar Organização</h1>
       </div>
 
-      <CreateOrganizationForm />
+      <OrganizationForm isEditing={false} org="" />
     </div>
   )
 }

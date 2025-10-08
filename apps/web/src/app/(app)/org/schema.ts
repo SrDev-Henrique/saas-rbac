@@ -1,6 +1,6 @@
 import z from 'zod'
 
-export const createOrganizationSchema = z
+export const organizationSchema = z
   .object({
     name: z.string().min(1, {
       message: 'Nome é obrigatório',
@@ -37,3 +37,5 @@ export const createOrganizationSchema = z
       path: ['domain'],
     },
   )
+
+export type OrganizationSchema = z.infer<typeof organizationSchema>

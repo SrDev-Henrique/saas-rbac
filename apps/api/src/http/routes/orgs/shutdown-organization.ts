@@ -7,6 +7,7 @@ import { auth } from '@/http/middlewares/auth'
 import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
+import { supabaseAdmin } from '@/server/supabase-server'
 
 export async function shutdownOrganization(app: FastifyInstance) {
   app
@@ -41,6 +42,37 @@ export async function shutdownOrganization(app: FastifyInstance) {
           throw new UnauthorizedError(
             `Você não tem permissão para encerrar esta organização.`,
           )
+        }
+
+        if (organization.avatarUrl) {
+          try {
+            const marker = '/avatars/'
+            let key: string | null = null
+
+            try {
+              const url = new URL(organization.avatarUrl)
+              const path = url.pathname
+              const idx = path.indexOf(marker)
+              if (idx !== -1) {
+                key = path.slice(idx + marker.length)
+              }
+            } catch {
+              const raw = organization.avatarUrl.split('?')[0]
+              const idx = raw.indexOf('avatars/')
+              if (idx !== -1) {
+                key = raw.slice(idx + 'avatars/'.length)
+              }
+            }
+
+            if (key) {
+              const normalizedKey = decodeURIComponent(key).replace(/^\/+/, '')
+              await supabaseAdmin.storage
+                .from('avatars')
+                .remove([normalizedKey])
+            }
+          } catch (error) {
+            request.log.error({ error }, 'Failed to delete avatar from storage')
+          }
         }
 
         await prisma.$transaction([

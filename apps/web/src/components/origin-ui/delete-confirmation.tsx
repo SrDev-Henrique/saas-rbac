@@ -1,7 +1,7 @@
 'use client'
 
 import { useId, useState } from 'react'
-import { CircleAlertIcon } from 'lucide-react'
+import { CircleAlertIcon, Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -21,10 +21,14 @@ export default function DeleteConfirmation({
   isOrg,
   name,
   onDelete,
+  isDeleting,
+  setIsDeleting,
 }: {
   isOrg: boolean
   name: string
   onDelete: () => void
+  isDeleting: boolean
+  setIsDeleting: (isDeleting: boolean) => void
 }) {
   const id = useId()
   const [inputValue, setInputValue] = useState('')
@@ -77,11 +81,18 @@ export default function DeleteConfirmation({
             <Button
               type="button"
               className="flex-1"
-              disabled={inputValue !== name}
+              disabled={inputValue !== name || isDeleting}
               onClick={onDelete}
               variant="destructive"
             >
-              Deletar
+              {isDeleting ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="size-4 animate-spin" />
+                  Deletando...
+                </div>
+              ) : (
+                'Deletar'
+              )}
             </Button>
           </DialogFooter>
         </form>

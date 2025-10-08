@@ -1,3 +1,6 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
 import {
   Dialog,
@@ -7,7 +10,11 @@ import {
   DialogTrigger,
 } from './ui/dialog'
 
-export default function EditInfo({ children }: { children: React.ReactNode }) {
+export default function EditInfo({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <Dialog>
       <DialogTrigger asChild>

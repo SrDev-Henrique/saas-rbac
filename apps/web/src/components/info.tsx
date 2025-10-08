@@ -6,10 +6,11 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Card, CardContent } from './ui/card'
 import { Skeleton } from './ui/skeleton'
 import EditInfo from './edit-info'
-import CreateOrganizationForm from '@/app/(app)/create-org/create-organization-form'
+import OrganizationForm from '@/app/(app)/org/organization-form'
 import DeleteConfirmation from './origin-ui/delete-confirmation'
 import { shutdownOrganization } from '@/http/shutdown-organization'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function Info({
   avatarUrl,
@@ -18,6 +19,7 @@ export default function Info({
   email,
   domain,
   description,
+  shouldAttachUsersByDomain,
   isLoading,
   members,
   isMembersLoading,
@@ -29,6 +31,7 @@ export default function Info({
   email?: string
   domain?: string
   description?: string
+  shouldAttachUsersByDomain?: boolean
   isLoading?: boolean
   members?: {
     userId: string
@@ -40,32 +43,45 @@ export default function Info({
   slug: string
 }) {
   const router = useRouter()
+  const [isDeleting, setIsDeleting] = useState(false)
 
   async function handleShutdown() {
     try {
+      setIsDeleting(true)
       await shutdownOrganization({ slug })
+      setIsDeleting(false)
       router.push('/')
       router.refresh()
     } catch (_error) {
       // Non-intrusive fallback; optionally replace with a toast system
       alert('Falha ao deletar a organização. Tente novamente.')
+      setIsDeleting(false)
     }
+  }
+
+  const initiaData = {
+    name,
+    domain,
+    description: description ?? null,
+    avatarUrl,
+    shouldAttachUsersByDomain,
   }
 
   return (
     <Card className="bg-secondary dark:bg-background mx-auto max-w-md">
       <CardContent className="space-y-4">
         <div className="relative flex items-center justify-center">
-          {avatarUrl ? (
-            <Avatar className="z-10 size-14 md:size-20">
-              <AvatarImage src={avatarUrl} />
-              <AvatarFallback>
-                {name.charAt(1).toUpperCase() + name.charAt(1).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          ) : (
-            <Skeleton className="bg-popover size-14 rounded-full md:size-20" />
-          )}
+          <Avatar className="z-10 size-14 md:size-20">
+            <AvatarImage src={avatarUrl} />
+            <AvatarFallback>
+              {name ? (
+                name?.charAt(0).toUpperCase() + name?.charAt(1).toUpperCase()
+              ) : (
+                <Skeleton className="bg-popover size-14 rounded-full md:size-20" />
+              )}
+            </AvatarFallback>
+          </Avatar>
+
           <div className="bg-popover absolute top-12 h-0.5 w-full" />
         </div>
         {members && members.length > 0 && (
@@ -79,6 +95,7 @@ export default function Info({
                 </p>
                 <AvatarGroup
                   avatarUrls={members.map((member) => member.avatarUrl)}
+                  names={members.map((member) => member.name)}
                 />
               </>
             )}
@@ -155,19 +172,25 @@ export default function Info({
                   !description && 'text-muted-foreground',
                 )}
               >
-                {description ?? 'Nenhuma descrição'}
+                {description !== null || '' ? description : 'Nenhuma descrição'}
               </p>
             </>
           )}
         </div>
         <div className="flex flex-col justify-center space-y-4">
           <EditInfo>
-            <CreateOrganizationForm isEditing={true} />
+            <OrganizationForm
+              isEditing={true}
+              initialData={initiaData}
+              org={slug}
+            />
           </EditInfo>
           <DeleteConfirmation
             isOrg={true}
             name={name}
             onDelete={handleShutdown}
+            isDeleting={isDeleting}
+            setIsDeleting={setIsDeleting}
           />
         </div>
       </CardContent>

@@ -9,12 +9,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { createOrganizationSchema } from './schema'
+import { organizationSchema } from './schema'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
-import { createOrganizationAction } from './actions'
-import { useSearchParams } from 'next/navigation'
+import { createOrganizationAction, updateOrganizationAction } from './actions'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState, useTransition } from 'react'
 import RedAlert from '@/components/origin-ui/alert-red'
 import { Button } from '@/components/ui/button'
@@ -27,23 +27,32 @@ import { queryClient } from '@/lib/react-query'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
-export default function CreateOrganizationForm({
-  isEditing,
+export default function OrganizationForm({
+  isEditing = false,
+  initialData,
+  org,
 }: {
   isEditing: boolean
+  initialData?: z.input<typeof organizationSchema>
+  org: string
 }) {
-  const formSchema = createOrganizationSchema
+  const formSchema = organizationSchema
 
-  const form = useForm<z.input<typeof createOrganizationSchema>>({
-    resolver: zodResolver(createOrganizationSchema),
+  const router = useRouter()
+
+  const form = useForm<z.input<typeof organizationSchema>>({
+    resolver: zodResolver(organizationSchema),
     defaultValues: {
-      name: '',
-      domain: '',
-      shouldAttachUsersByDomain: false,
-      avatarUrl: '',
-      description: '',
+      name: initialData?.name ?? '',
+      domain: initialData?.domain ?? '',
+      shouldAttachUsersByDomain:
+        initialData?.shouldAttachUsersByDomain ?? false,
+      avatarUrl: initialData?.avatarUrl ?? '',
+      description: initialData?.description ?? '',
     },
   })
+
+  console.log(initialData?.avatarUrl)
 
   const [{ success, message }, setFormState] = useState<{
     success: boolean
@@ -54,6 +63,8 @@ export default function CreateOrganizationForm({
   })
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
+
+  console.log(avatarFile)
 
   const [removeAvatarFile, setRemoveAvatarFile] = useState(false)
 
@@ -83,6 +94,8 @@ export default function CreateOrganizationForm({
             return
           }
           avatarUrl = result.avatarUrl
+        } else if (initialData?.avatarUrl) {
+          avatarUrl = initialData.avatarUrl
         }
 
         const normalizedDomain = (() => {
@@ -98,10 +111,13 @@ export default function CreateOrganizationForm({
           description: data.description,
         }
 
-        const state = (await createOrganizationAction(payload)) as {
+        const state = (await (isEditing
+          ? updateOrganizationAction(payload, org)
+          : createOrganizationAction(payload))) as {
           success: boolean
           message: string | null
           errors: unknown
+          slug?: string
         }
 
         setFormState({ success: state.success, message: state.message })
@@ -128,7 +144,16 @@ export default function CreateOrganizationForm({
           setAvatarFile(null)
           setRemoveAvatarFile(true)
           setTimeout(() => setRemoveAvatarFile(false), 50)
+          const nextSlug = state.slug ?? org
           queryClient.invalidateQueries({ queryKey: ['organizations'] })
+          queryClient.invalidateQueries({
+            queryKey: ['organization', nextSlug],
+          })
+          if (nextSlug !== org) {
+            queryClient.removeQueries({ queryKey: ['organization', org] })
+          }
+          router.push(`/org/${nextSlug}/settings`)
+          router.refresh()
         }
       } catch (err: any) {
         setFormState({

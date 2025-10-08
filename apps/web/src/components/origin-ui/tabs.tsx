@@ -16,6 +16,8 @@ import { useParams, usePathname } from 'next/navigation'
 import { getProjects } from '@/http/get-projects'
 import { useQuery } from '@tanstack/react-query'
 import { useAbility } from '@/hooks/use-ability'
+import { queryClient } from '@/lib/react-query'
+import { useEffect } from 'react'
 
 export default function NavigationTabs() {
   const { slug: org } = useParams<{ slug: string }>()
@@ -43,6 +45,10 @@ export default function NavigationTabs() {
   const canUpdateOrganization = permissions.data?.can('update', 'Organization')
   const canGetProjects = permissions.data?.can('get', 'Project')
   const canGetMembers = permissions.data?.can('get', 'User')
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['ability', org] })
+  }, [org])
 
   return (
     <Tabs defaultValue={defaultValue}>

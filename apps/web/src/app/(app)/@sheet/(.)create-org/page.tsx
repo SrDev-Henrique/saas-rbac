@@ -6,7 +6,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import CreateOrganizationForm from '../../create-org/create-organization-form'
+import OrganizationForm from '../../org/organization-form'
 import { useRouter } from 'next/navigation'
 
 export default function CreateOrganizationPage() {
@@ -23,7 +23,7 @@ export default function CreateOrganizationPage() {
           <SheetTitle>Criar Organização</SheetTitle>
         </SheetHeader>
 
-        <CreateOrganizationForm />
+        <OrganizationForm isEditing={false} org="" />
       </SheetContent>
     </Sheet>
   )

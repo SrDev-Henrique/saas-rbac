@@ -19,10 +19,11 @@ export default function OrganizationSettingsClient({ slug }: { slug: string }) {
         name={organization?.name!}
         domain={organization?.domain!}
         description={organization?.description!}
+        shouldAttachUsersByDomain={organization?.shouldAttachUsersByDomain!}
         isLoading={isLoading}
         members={members}
         isMembersLoading={isMembersLoading}
-        slug={slug}
+        slug={organization?.slug!}
       />
     </div>
   )

@@ -124,7 +124,7 @@ export default function FileUploaderField({
 
       {fileName && (
         <div className="inline-flex gap-2 text-xs">
-          <p className="text-muted-foreground truncate" aria-live="polite">
+          <p className="text-muted-foreground max-w-32 truncate" aria-live="polite">
             {fileName}
           </p>
           <button
