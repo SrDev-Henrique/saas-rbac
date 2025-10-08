@@ -68,7 +68,7 @@ export default function Info({
   }
 
   return (
-    <Card className="bg-secondary dark:bg-background mx-auto max-w-md">
+    <Card className="bg-secondary dark:bg-card mx-auto max-w-md">
       <CardContent className="space-y-4">
         <div className="relative flex items-center justify-center">
           <Avatar className="z-10 size-14 md:size-20">
@@ -111,7 +111,7 @@ export default function Info({
             ) : (
               <>
                 <p className="font-medium">Nome</p>
-                <p className="bg-popover border-border mt-1 truncate rounded-md border p-2 text-sm font-medium">
+                <p className="bg-popover dark:bg-background border-border mt-1 truncate rounded-md border p-2 text-sm font-medium">
                   {name}
                 </p>
               </>
@@ -130,7 +130,7 @@ export default function Info({
                 </p>
                 <p
                   className={cn(
-                    'bg-popover border-border mt-1 truncate rounded-md border p-2 text-sm font-medium',
+                    'bg-popover dark:bg-background border-border mt-1 truncate rounded-md border p-2 text-sm font-medium',
                     !domain && 'text-muted-foreground',
                   )}
                 >
@@ -150,7 +150,7 @@ export default function Info({
             ) : (
               <>
                 <p className="font-medium">Email</p>
-                <p className="bg-popover border-border truncate rounded-md border p-2 text-sm font-medium">
+                <p className="bg-popover dark:bg-background border-border truncate rounded-md border p-2 text-sm font-medium">
                   {email}
                 </p>
               </>
@@ -168,7 +168,7 @@ export default function Info({
               <p className="font-medium">Descrição</p>
               <p
                 className={cn(
-                  'bg-popover border-border rounded-md border p-2 text-sm font-medium',
+                  'bg-popover dark:bg-background border-border rounded-md border p-2 text-sm font-medium',
                   !description && 'text-muted-foreground',
                 )}
               >

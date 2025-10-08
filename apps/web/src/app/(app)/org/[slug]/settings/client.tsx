@@ -13,7 +13,7 @@ export default function OrganizationSettingsClient({ slug }: { slug: string }) {
   const members = membersData?.members || []
 
   return (
-    <div className="bg-card w-full rounded-lg py-4">
+    <div className="bg-background w-full rounded-lg py-4">
       <Info
         avatarUrl={organization?.avatarUrl!}
         name={organization?.name!}

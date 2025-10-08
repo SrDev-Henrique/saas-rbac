@@ -7,7 +7,7 @@ import ThemeSwitcher from './origin-ui/theme-switcher'
 import Link from 'next/link'
 import ProjectsSwitcher from './projects-switcher'
 
-export default async function Header({
+export default async function   Header({
   slug,
   canGetProjects,
 }: {

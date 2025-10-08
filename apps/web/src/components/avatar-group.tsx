@@ -9,7 +9,7 @@ export default function AvatarGroup({
   names: string[]
 }) {
   return (
-    <div className="border-background bg-background dark:bg-secondary flex items-center rounded-full border p-1 shadow-md">
+    <div className="bg-background flex items-center rounded-full border p-1 shadow-md">
       <div className="flex -space-x-3">
         {avatarUrls.slice(0, 4).map((avatarUrl, index) => (
           <div key={avatarUrl}>
