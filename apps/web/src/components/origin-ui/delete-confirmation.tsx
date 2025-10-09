@@ -23,12 +23,14 @@ export default function DeleteConfirmation({
   onDelete,
   isDeleting,
   setIsDeleting,
+  disabled,
 }: {
   isOrg: boolean
   name: string
   onDelete: () => void
   isDeleting: boolean
   setIsDeleting: (isDeleting: boolean) => void
+  disabled: boolean | undefined
 }) {
   const id = useId()
   const [inputValue, setInputValue] = useState('')
@@ -36,7 +38,7 @@ export default function DeleteConfirmation({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive">
+        <Button variant="destructive" disabled={disabled}>
           {isOrg ? 'Deletar organização' : 'Deletar projeto'}
         </Button>
       </DialogTrigger>

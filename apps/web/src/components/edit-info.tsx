@@ -12,13 +12,17 @@ import {
 
 export default function EditInfo({
   children,
+  disabled,
 }: {
   children: React.ReactNode
+  disabled: boolean | undefined
 }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Editar informações</Button>
+        <Button variant="outline" disabled={disabled}>
+          Editar informações
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

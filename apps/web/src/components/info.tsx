@@ -181,7 +181,7 @@ export default function Info({
           )}
         </div>
         <div className="flex flex-col justify-center space-y-4">
-          <EditInfo>
+          <EditInfo disabled={isLoading}>
             <OrganizationForm
               isEditing={true}
               initialData={initiaData}
@@ -189,6 +189,7 @@ export default function Info({
             />
           </EditInfo>
           <DeleteConfirmation
+            disabled={isLoading}
             isOrg={true}
             name={name}
             onDelete={handleShutdown}
