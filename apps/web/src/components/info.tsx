@@ -67,6 +67,9 @@ export default function Info({
     shouldAttachUsersByDomain,
   }
 
+  const validDescription =
+    description !== null || '' ? description : 'Nenhuma descrição'
+
   return (
     <Card className="bg-secondary dark:bg-card mx-auto max-w-md">
       <CardContent className="space-y-4">
@@ -172,7 +175,7 @@ export default function Info({
                   !description && 'text-muted-foreground',
                 )}
               >
-                {description !== null || '' ? description : 'Nenhuma descrição'}
+                {validDescription}
               </p>
             </>
           )}
