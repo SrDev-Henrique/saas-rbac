@@ -60,6 +60,14 @@ export async function getMembers(app: FastifyInstance) {
                 name: true,
                 email: true,
                 avatarUrl: true,
+                member_on: {
+                  where: {
+                    organizationId: organization.id,
+                  },
+                  select: {
+                    role: true,
+                  },
+                },
               },
             },
           },
@@ -72,7 +80,7 @@ export async function getMembers(app: FastifyInstance) {
         })
 
         const membersWithRole = members.map(
-          ({ user: { id: userId, ...user }, ...member }) => {
+          ({ user: { id: userId, member_on, ...user }, ...member }) => {
             return {
               ...member,
               ...user,

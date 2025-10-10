@@ -1,3 +1,4 @@
+import { Role } from '@saas/auth'
 import { api } from './api-client'
 
 interface GetMembersRequest {
@@ -10,6 +11,8 @@ interface GetMembersResponse {
     name: string
     avatarUrl: string
     email: string
+    role: Role
+    id: string
   }[]
 }
 

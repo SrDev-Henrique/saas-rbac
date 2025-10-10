@@ -17,25 +17,15 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-export default function DeleteConfirmation({
-  isOrg,
-  isMember,
+export default function TransferConfirmation({
   name,
-  onDelete,
-  isDeleting,
-  setIsDeleting,
-  disabled,
-  size,
+  onTransfer,
+  isTransferring,
   Icon,
 }: {
-  isOrg?: boolean
-  isMember?: boolean
   name: string
-  onDelete: () => void
-  isDeleting: boolean
-  setIsDeleting: (isDeleting: boolean) => void
-  disabled: boolean | undefined
-  size?: 'sm' | 'lg' | 'default' | 'icon' | null | undefined
+  onTransfer: () => void
+  isTransferring: boolean
   Icon?: React.ReactNode
 }) {
   const id = useId()
@@ -44,13 +34,9 @@ export default function DeleteConfirmation({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={size} variant="destructive" disabled={disabled}>
+        <Button size="sm" variant="outline">
           {Icon}
-          {isOrg
-            ? 'Deletar organização'
-            : isMember
-              ? 'Remover membro'
-              : 'Deletar projeto'}
+          Transferir propriedade
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -66,7 +52,7 @@ export default function DeleteConfirmation({
               Confirmação final
             </DialogTitle>
             <DialogDescription className="sm:text-center">
-              {`Esta ação não pode ser desfeita. Para confirmar, por favor, digite o nome d${isOrg ? 'a organização' : isMember ? 'o membro' : 'o projeto'}`}{' '}
+              {`Caso queira confirmar a transferência da propriedade desta organização, por favor, digite o nome do membro`}{' '}
               <span className="text-foreground">{name}</span>.
             </DialogDescription>
           </DialogHeader>
@@ -74,17 +60,11 @@ export default function DeleteConfirmation({
 
         <form className="space-y-5">
           <div className="*:not-first:mt-2">
-            <Label htmlFor={id}>
-              {isOrg
-                ? 'Nome da organização'
-                : isMember
-                  ? 'Nome do membro'
-                  : 'Nome do projeto'}
-            </Label>
+            <Label htmlFor={id}>Nome do membro</Label>
             <Input
               id={id}
               type="text"
-              placeholder={`Digite ${name} para confirmar`}
+              placeholder={`Digite ${name} para confirmar a transferência`}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
@@ -98,19 +78,16 @@ export default function DeleteConfirmation({
             <Button
               type="button"
               className="flex-1"
-              disabled={inputValue !== name || isDeleting}
-              onClick={onDelete}
-              variant="destructive"
+              disabled={inputValue !== name || isTransferring}
+              onClick={onTransfer}
             >
-              {isDeleting ? (
+              {isTransferring ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="size-4 animate-spin" />
-                  {isMember ? 'Removendo...' : 'Deletando...'}
+                  Transferindo...
                 </div>
-              ) : isMember ? (
-                'Remover'
               ) : (
-                'Deletar'
+                'Transferir'
               )}
             </Button>
           </DialogFooter>
