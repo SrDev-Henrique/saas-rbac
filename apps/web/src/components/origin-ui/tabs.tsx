@@ -48,6 +48,7 @@ export default function NavigationTabs() {
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ['ability', org] })
+    queryClient.invalidateQueries({ queryKey: ['membership', org] })
   }, [org])
 
   return (

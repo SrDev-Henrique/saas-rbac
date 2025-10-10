@@ -22,6 +22,8 @@ import { useState } from 'react'
 import TransferConfirmation from './transfer-confirmation'
 import { useGetMembership } from '@/hooks/use-get-membership'
 import { queryClient } from '@/lib/react-query'
+import UpdateMemberRole from './update-member-role'
+import { transferOrganization } from '@/http/transfer-organization'
 
 export default function MembersTable({
   members,
@@ -52,6 +54,22 @@ export default function MembersTable({
     currentOrganization!,
   )
   const canRemoveMember = permissions.data?.can('delete', 'User')
+  const canUpdateMember = permissions.data?.can('update', 'User')
+
+  console.log(canTransferOwnership)
+
+  async function handleTransferOrganization(newOwnerId: string) {
+    try {
+      setIsTransferring(true)
+      await transferOrganization({ newOwnerId })
+      setIsTransferring(false)
+      queryClient.invalidateQueries({ queryKey: ['membership', org] })
+      queryClient.invalidateQueries({ queryKey: ['members', org] })
+    } catch (error) {
+      alert(error)
+      setIsTransferring(false)
+    }
+  }
 
   async function handleRemoveMember(orgSlug: string, memberId: string) {
     try {
@@ -73,13 +91,13 @@ export default function MembersTable({
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 <TableHead>
-                  <Skeleton className="bg-popover h-5 w-20 rounded-md" />
+                  <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-popover h-5 w-20 rounded-md" />
+                  <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
                 </TableHead>
                 <TableHead>
-                  <Skeleton className="bg-popover h-5 w-20 rounded-md" />
+                  <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -88,28 +106,28 @@ export default function MembersTable({
                 <TableRow key={index}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <Skeleton className="bg-popover size-9 rounded-full" />
+                      <Skeleton className="dark:bg-popover size-9 rounded-full" />
                       <div className="flex flex-col gap-1">
                         <div className="font-medium">
-                          <Skeleton className="bg-popover h-5 w-32 rounded-md" />
+                          <Skeleton className="dark:bg-popover h-5 w-32 rounded-md" />
                         </div>
                         <span className="text-muted-foreground mt-0.5 text-xs">
-                          <Skeleton className="bg-popover h-5 w-20 rounded-md" />
+                          <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
                         </span>
                       </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="bg-popover h-5 w-20 rounded-md" />
+                    <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="bg-popover h-5 w-20 rounded-md" />
+                    <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="bg-popover h-5 w-16 rounded-md" />
+                    <Skeleton className="dark:bg-popover h-5 w-16 rounded-md" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="bg-popover h-5 w-16 rounded-md" />
+                    <Skeleton className="dark:bg-popover h-5 w-16 rounded-md" />
                   </TableCell>
                 </TableRow>
               ))}
@@ -155,15 +173,23 @@ export default function MembersTable({
                   </TableCell>
                   <TableCell>{item.email}</TableCell>
                   <TableCell>
-                    <Badge>
-                      {item.role.toLowerCase() === 'admin' ? (
-                        <>
-                          <CrownIcon className="size-3" /> Admin
-                        </>
-                      ) : (
-                        'Membro'
-                      )}
-                    </Badge>
+                    {canUpdateMember && item.role !== 'ADMIN' ? (
+                      <UpdateMemberRole
+                        value={item.role}
+                        memberId={item.id}
+                        org={org}
+                      />
+                    ) : (
+                      <Badge>
+                        {item.role.toLowerCase() === 'admin' ? (
+                          <>
+                            <CrownIcon className="size-3" /> Admin
+                          </>
+                        ) : (
+                          'Membro'
+                        )}
+                      </Badge>
+                    )}
                   </TableCell>
                   {canTransferOwnership && (
                     <TableCell
@@ -176,7 +202,9 @@ export default function MembersTable({
                       <TransferConfirmation
                         Icon={<ArrowLeftRight />}
                         name={item.name}
-                        onTransfer={() => {}}
+                        onTransfer={() =>
+                          handleTransferOrganization(item.userId)
+                        }
                         isTransferring={isTransferring}
                       />
                     </TableCell>
@@ -184,7 +212,8 @@ export default function MembersTable({
                   {canRemoveMember && (
                     <TableCell
                       className={
-                        item.userId === currentOrganization!.ownerId
+                        item.userId === currentOrganization!.ownerId ||
+                        item.userId === membership?.membership.userId
                           ? 'hidden'
                           : ''
                       }

@@ -79,7 +79,7 @@ export default function TransferConfirmation({
               type="button"
               className="flex-1"
               disabled={inputValue !== name || isTransferring}
-              onClick={onTransfer}
+              onClick={() => onTransfer()}
             >
               {isTransferring ? (
                 <div className="flex items-center gap-2">

@@ -80,12 +80,12 @@ export default function Info({
               {name ? (
                 name?.charAt(0).toUpperCase() + name?.charAt(1).toUpperCase()
               ) : (
-                <Skeleton className="bg-popover size-14 rounded-full md:size-20" />
+                <Skeleton className="dark:bg-popover size-14 rounded-full md:size-20" />
               )}
             </AvatarFallback>
           </Avatar>
 
-          <div className="bg-popover absolute top-12 h-0.5 w-full" />
+          <div className="dark:bg-popover absolute top-12 h-0.5 w-full" />
         </div>
         {members && members.length > 0 && (
           <div className="flex flex-col items-center gap-2">
@@ -108,8 +108,8 @@ export default function Info({
           <div className="flex w-full flex-col">
             {isLoading ? (
               <div className="flex w-full flex-col gap-1">
-                <Skeleton className="bg-popover h-5 w-20 rounded-md" />{' '}
-                <Skeleton className="bg-popover h-9 w-full rounded-md" />
+                <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />{' '}
+                <Skeleton className="dark:bg-popover h-9 w-full rounded-md" />
               </div>
             ) : (
               <>
@@ -123,8 +123,8 @@ export default function Info({
           <div className="w-full">
             {isLoading ? (
               <div className="flex w-full flex-col gap-1">
-                <Skeleton className="bg-popover h-5 w-20 rounded-md" />{' '}
-                <Skeleton className="bg-popover h-9 w-full rounded-md" />
+                <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />{' '}
+                <Skeleton className="dark:bg-popover h-9 w-full rounded-md" />
               </div>
             ) : (
               <div className="flex w-full flex-col gap-1">
@@ -147,8 +147,8 @@ export default function Info({
           <div className="flex flex-col gap-1">
             {isLoading ? (
               <>
-                <Skeleton className="bg-popover h-5 w-20 rounded-md" />{' '}
-                <Skeleton className="bg-popover h-9 w-full rounded-md" />
+                <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />{' '}
+                <Skeleton className="dark:bg-popover h-9 w-full rounded-md" />
               </>
             ) : (
               <>
@@ -163,8 +163,8 @@ export default function Info({
         <div className="flex flex-col gap-1">
           {isLoading ? (
             <>
-              <Skeleton className="bg-popover h-5 w-20 rounded-md" />{' '}
-              <Skeleton className="bg-popover h-9 w-full rounded-md" />
+              <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />{' '}
+              <Skeleton className="dark:bg-popover h-9 w-full rounded-md" />
             </>
           ) : (
             <>
