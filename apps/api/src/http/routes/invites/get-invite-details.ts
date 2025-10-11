@@ -3,6 +3,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { BadRequestError } from '../_errors/bad-request-error'
+import { roleSchema } from '@saas/auth'
 
 export async function getInviteDetails(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().get(
@@ -19,7 +20,7 @@ export async function getInviteDetails(app: FastifyInstance) {
             invite: z.object({
               id: z.uuid(),
               createdAt: z.date(),
-              role: z.enum(['ADMIN', 'MEMBER', 'BILLING']),
+              role: roleSchema,
               email: z.email(),
               organization: z.object({
                 name: z.string(),

@@ -4,6 +4,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { BadRequestError } from '../_errors/bad-request-error'
+import { roleSchema } from '@saas/auth'
 
 export async function getPendingInvites(app: FastifyInstance) {
   app
@@ -22,7 +23,7 @@ export async function getPendingInvites(app: FastifyInstance) {
                 z.object({
                   id: z.uuid(),
                   email: z.string(),
-                  role: z.string(),
+                  role: roleSchema,
                   createdAt: z.date(),
                   author: z
                     .object({

@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { BadRequestError } from '../_errors/bad-request-error'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 import { UnauthorizedError } from '../_errors/unauthorized-error'
+import { roleSchema } from '@saas/auth'
 
 export async function getInvites(app: FastifyInstance) {
   app
@@ -27,7 +28,7 @@ export async function getInvites(app: FastifyInstance) {
                 z.object({
                   id: z.uuid(),
                   email: z.string(),
-                  role: z.string(),
+                  role: roleSchema,
                   createdAt: z.date(),
                   author: z
                     .object({

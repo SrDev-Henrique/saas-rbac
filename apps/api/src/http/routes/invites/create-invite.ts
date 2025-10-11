@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { UnauthorizedError } from '../_errors/unauthorized-error'
 import { BadRequestError } from '../_errors/bad-request-error'
 import { prisma } from '@/lib/prisma'
+import { roleSchema } from '@saas/auth'
 
 export async function createInvite(app: FastifyInstance) {
   app
@@ -23,7 +24,7 @@ export async function createInvite(app: FastifyInstance) {
           }),
           body: z.object({
             email: z.email(),
-            role: z.enum(['ADMIN', 'MEMBER', 'BILLING']),
+            role: roleSchema,
           }),
           response: {
             201: z.object({
