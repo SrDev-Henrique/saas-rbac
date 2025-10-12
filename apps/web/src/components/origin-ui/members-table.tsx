@@ -90,15 +90,11 @@ export default function MembersTable({
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead>
-                  <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
-                </TableHead>
-                <TableHead>
-                  <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
-                </TableHead>
-                <TableHead>
-                  <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
-                </TableHead>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <TableHead key={index}>
+                    <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
+                  </TableHead>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -117,18 +113,11 @@ export default function MembersTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="dark:bg-popover h-5 w-16 rounded-md" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="dark:bg-popover h-5 w-16 rounded-md" />
-                  </TableCell>
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <TableCell key={index}>
+                      <Skeleton className="dark:bg-popover h-5 w-20 rounded-md" />
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))}
             </TableBody>
@@ -142,6 +131,8 @@ export default function MembersTable({
                 <TableHead>Nome</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Função</TableHead>
+                <TableHead>Transferir</TableHead>
+                <TableHead>Remover</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

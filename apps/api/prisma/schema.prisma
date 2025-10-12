@@ -69,6 +69,7 @@ model Invite {
   id String @id @default(uuid())
   email String 
   role Role
+  invitedName String @map("invited_name")
   createdAt DateTime @default(now()) @map("created_at")
 
   author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)

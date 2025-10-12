@@ -20,6 +20,7 @@ export async function getInviteDetails(app: FastifyInstance) {
             invite: z.object({
               id: z.uuid(),
               createdAt: z.date(),
+              invitedName: z.string(),
               role: roleSchema,
               email: z.email(),
               organization: z.object({
@@ -47,6 +48,7 @@ export async function getInviteDetails(app: FastifyInstance) {
         },
         select: {
           id: true,
+          invitedName: true,
           email: true,
           role: true,
           createdAt: true,

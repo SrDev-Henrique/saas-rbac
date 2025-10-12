@@ -23,6 +23,7 @@ export async function createInvite(app: FastifyInstance) {
             slug: z.string(),
           }),
           body: z.object({
+            invitedName: z.string(),
             email: z.email(),
             role: roleSchema,
           }),
@@ -47,7 +48,7 @@ export async function createInvite(app: FastifyInstance) {
           )
         }
 
-        const { email, role } = request.body
+        const { email, role, invitedName } = request.body
 
         const inviteWithSameEmail = await prisma.invite.findUnique({
           where: {
@@ -89,6 +90,7 @@ export async function createInvite(app: FastifyInstance) {
         const invite = await prisma.invite.create({
           data: {
             authorId: userId,
+            invitedName,
             email,
             role,
             organizationId: organization.id,
