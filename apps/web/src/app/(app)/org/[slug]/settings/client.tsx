@@ -24,6 +24,7 @@ export default function OrganizationSettingsClient({ slug }: { slug: string }) {
         members={members}
         isMembersLoading={isMembersLoading}
         slug={organization?.slug!}
+        isOrg={true}
       />
     </div>
   )

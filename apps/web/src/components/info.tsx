@@ -24,6 +24,7 @@ export default function Info({
   members,
   isMembersLoading,
   slug,
+  isOrg,
 }: {
   avatarUrl: string
   name: string
@@ -41,6 +42,7 @@ export default function Info({
   }[]
   isMembersLoading?: boolean
   slug: string
+  isOrg?: boolean
 }) {
   const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
@@ -68,7 +70,9 @@ export default function Info({
   }
 
   const validDescription =
-    description !== null || '' ? description : 'Nenhuma descrição'
+    description !== null && description !== undefined && description !== ''
+      ? description
+      : 'Nenhuma descrição'
 
   return (
     <Card className="bg-secondary dark:bg-card mx-auto max-w-md">
@@ -128,9 +132,7 @@ export default function Info({
               </div>
             ) : (
               <div className="flex w-full flex-col gap-1">
-                <p className="font-medium">
-                  {domain ? 'Domínio' : 'Sobrenome'}
-                </p>
+                <p className="font-medium">{isOrg ? 'Domínio' : 'Sobrenome'}</p>
                 <p
                   className={cn(
                     'bg-popover dark:bg-background border-border mt-1 truncate rounded-md border p-2 text-sm font-medium',
