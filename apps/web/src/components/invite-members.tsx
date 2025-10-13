@@ -1,19 +1,77 @@
-import { useGetInvites } from "@/hooks/use-get-invites";
-import { AppAbility } from "@saas/auth";
+import { useGetInvites } from '@/hooks/use-get-invites'
+import { AppAbility } from '@saas/auth'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from './ui/card'
+import InviteMembersDialog from './invite-members-dialog'
+import Invite from './origin-ui/invite'
+import { UserX2 } from 'lucide-react'
 
 interface InviteMembersProps {
   slug: string
   permissions: AppAbility | null | undefined
 }
 
-export default function InviteMembers({ slug, permissions }: InviteMembersProps) {
+export default function InviteMembers({
+  slug,
+  permissions,
+}: InviteMembersProps) {
   const { data: invites, isLoading } = useGetInvites({ slug })
 
   const canCreateInvite = permissions?.can('create', 'Invite')
 
   return (
-    <div>
-      <h1>Invite Members</h1>
+    <div className="space-y-2">
+      <h1 className="text-2xl font-bold">Convites</h1>
+      <div className="border-border rounded-xl border p-4">
+        <Card className="bg-background border-none shadow-none">
+          <CardHeader>
+            <CardTitle className="text-center">Convidar Membros</CardTitle>
+            <CardDescription className="text-center">
+              Clique no botão abaixo para convidar membros para sua organização.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center">
+              <InviteMembersDialog org={slug} />
+            </div>
+          </CardContent>
+        </Card>
+
+        {(invites?.invites.length ?? 0 > 0) ? (
+          <Card className="bg-background border-none shadow-none">
+            <CardHeader>
+              <CardTitle className="text-center">Convites Ativos</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex max-h-[500px] flex-col items-center gap-4 overflow-y-auto">
+                {invites?.invites.map((invite) => (
+                  <Invite key={invite.id} invite={invite} orgSlug={slug} />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+            <Card className="bg-background border-none shadow-none">
+              <div className="flex justify-center">
+                <UserX2 size={32} className="text-muted-foreground" />
+              </div>
+            <CardHeader>
+              <CardTitle className="text-center">
+                Nenhum convite encontrado
+              </CardTitle>
+              <CardDescription className="text-center">
+                Convide membros para sua organização e seus convites serão
+                exibidos aqui.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        )}
+      </div>
     </div>
   )
 }

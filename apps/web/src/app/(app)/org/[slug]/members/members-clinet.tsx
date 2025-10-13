@@ -31,7 +31,6 @@ export default function MembersClient() {
 
   return (
     <div className="space-y-4">
-      {canInviteMembers && <InviteMembers slug={org!} permissions={permissions.data} />}
       {canGetMembers && (
         <MembersList
           members={membersList}
@@ -39,6 +38,9 @@ export default function MembersClient() {
           org={org!}
           organization={authOrganization}
         />
+      )}
+      {canInviteMembers && (
+        <InviteMembers slug={org!} permissions={permissions.data} />
       )}
     </div>
   )

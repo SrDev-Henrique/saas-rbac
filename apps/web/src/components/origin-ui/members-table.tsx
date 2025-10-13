@@ -131,8 +131,8 @@ export default function MembersTable({
                 <TableHead>Nome</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Função</TableHead>
-                <TableHead>Transferir</TableHead>
-                <TableHead>Remover</TableHead>
+                {canTransferOwnership && <TableHead>Transferir</TableHead>}
+                {canRemoveMember && <TableHead>Remover</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>

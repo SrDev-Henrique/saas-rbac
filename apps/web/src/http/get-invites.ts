@@ -11,6 +11,7 @@ interface GetInvitesResponse {
     email: string
     role: Role
     createdAt: Date
+    invitedName: string
     author: {
       id: string
       name: string | null

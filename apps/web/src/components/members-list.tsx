@@ -22,7 +22,8 @@ export default function MembersList({
   organization: Organization | null
 }) {
   return (
-    <div>
+    <div className="space-y-2">
+      <h1 className="text-2xl font-bold">Membros</h1>
       <MembersTable
         members={members}
         isLoading={isLoading}
