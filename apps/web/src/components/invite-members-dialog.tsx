@@ -1,10 +1,11 @@
 'use client'
 
-import { useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState, useTransition } from 'react'
 import {
   CheckIcon,
   CopyIcon,
   CreditCardIcon,
+  Loader2,
   Minus,
   UserIcon,
   UserRoundPlusIcon,
@@ -47,9 +48,15 @@ import {
   FormItem,
   FormControl,
 } from './ui/form'
+import { useSearchParams } from 'next/navigation'
+import { createInviteAction } from '@/app/(app)/org/[slug]/members/actions'
+import { queryClient } from '@/lib/react-query'
+import RedAlert from './origin-ui/alert-red'
+import EmeraldAlert from './origin-ui/alert-emerald'
 
 export default function InviteMembersDialog({ org }: { org: string }) {
   const id = useId()
+
   const formSchema = inviteMembersSchema
   const form = useForm<z.input<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,6 +70,7 @@ export default function InviteMembersDialog({ org }: { org: string }) {
       ],
     },
   })
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'invites',
@@ -83,12 +91,83 @@ export default function InviteMembersDialog({ org }: { org: string }) {
     }
   }
 
+  const [{ success, message }, setFormState] = useState<{
+    success: boolean
+    message: string | null
+  }>({
+    success: false,
+    message: null,
+  })
+
+  const [isLoading, startTransition] = useTransition()
+
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const error = searchParams.get('error')
+    if (error) {
+      setFormState({ success: false, message: error })
+    }
+  }, [searchParams])
+
   function onSubmit(data: z.input<typeof formSchema>) {
-    console.log({ invites: data.invites })
+    startTransition(async () => {
+      try {
+        const state = (await createInviteAction(data, org)) as {
+          success: boolean
+          message: string | null
+          errors: unknown
+        }
+
+        setFormState({ success: state.success, message: state.message })
+
+        if (
+          state?.errors &&
+          typeof state.errors === 'object' &&
+          !Array.isArray(state.errors)
+        ) {
+          const entries = Object.entries(
+            state.errors as Record<string, unknown>,
+          )
+          for (const [field, messages] of entries) {
+            const messageText = Array.isArray(messages)
+              ? String(messages[0])
+              : String(messages ?? '')
+            // @ts-expect-error dynamic field mapping from server
+            form.setError(field, { type: 'server', message: messageText })
+          }
+        }
+
+        const hasFieldErrors = Boolean(
+          state?.errors &&
+            typeof state.errors === 'object' &&
+            !Array.isArray(state.errors) &&
+            Object.keys(state.errors as Record<string, unknown>).length > 0,
+        )
+
+        if (state.success) {
+          queryClient.invalidateQueries({ queryKey: ['invites', org] })
+        }
+
+        if (state.success && !hasFieldErrors) {
+          form.reset()
+        }
+      } catch (err: any) {
+        setFormState({
+          success: false,
+          message: err?.message ?? 'Erro desconhecido',
+        })
+      }
+    })
   }
 
   return (
-    <Dialog>
+    <Dialog
+      onOpenChange={() => {
+        form.reset()
+        setFormState({ success: false, message: null })
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="default">Convidar membros</Button>
       </DialogTrigger>
@@ -115,6 +194,8 @@ export default function InviteMembersDialog({ org }: { org: string }) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            {success === false && message && <RedAlert text={message} />}
+            {success === true && message && <EmeraldAlert text={message} />}
             <div className="space-y-4">
               <div className="*:not-first:mt-2">
                 <Label>Convidar via email</Label>
@@ -122,108 +203,119 @@ export default function InviteMembersDialog({ org }: { org: string }) {
                   {fields.map((fieldItem, index) => (
                     <div
                       key={index}
-                      className="border-border flex items-start gap-2 rounded-md border p-2"
+                      className="border-border flex flex-col gap-2 rounded-md border p-2"
                     >
-                      <div className="flex flex-col space-y-2">
-                        <FormField
-                          control={form.control}
-                          name={`invites.${index}.email`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Email</FormLabel>
-                              <FormControl>
-                                <Input
-                                  id={`team-email-${index + 1}`}
-                                  placeholder="exemplo@exemplo.com"
-                                  type="email"
-                                  {...field}
-                                  ref={
-                                    index === fields.length - 1
-                                      ? lastInputRef
-                                      : undefined
-                                  }
-                                  className="relative"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <div className="flex items-center gap-2">
-                          <div className="*:not-first:mt-2">
-                            <FormField
-                              control={form.control}
-                              name={`invites.${index}.name`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Nome</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      id={`team-name-${index + 1}`}
-                                      placeholder="Nome"
-                                      type="text"
-                                      {...field}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          <div className="*:not-first:mt-2">
-                            <FormField
-                              control={form.control}
-                              name={`invites.${index}.role`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Cargo</FormLabel>
-                                  <FormControl>
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      value={field.value}
-                                    >
-                                      <SelectTrigger className="[&>span_svg]:text-muted-foreground/80 h-8 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_svg]:shrink-0">
-                                        <SelectValue placeholder="Selecione" />
-                                      </SelectTrigger>
-                                      <SelectContent className="[&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]>span>svg]:shrink-0">
-                                        <SelectItem value="MEMBER">
-                                          <UserIcon
-                                            size={16}
-                                            aria-hidden="true"
-                                          />
-                                          <span className="truncate">
-                                            Membro
-                                          </span>
-                                        </SelectItem>
-                                        <SelectItem value="BILLING">
-                                          <CreditCardIcon
-                                            size={16}
-                                            aria-hidden="true"
-                                          />
-                                          <span className="truncate">
-                                            Faturamento
-                                          </span>
-                                        </SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
+                      {(() => {
+                        const rowError = (form.formState.errors as any)
+                          ?.invites?.[index]?.root?.message
+                        return rowError ? (
+                          <p className="text-destructive mb-1 text-sm">
+                            {String(rowError)}
+                          </p>
+                        ) : null
+                      })()}
+                      <div className="flex items-start gap-2">
+                        <div className="flex flex-col space-y-2">
+                          <FormField
+                            control={form.control}
+                            name={`invites.${index}.email`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    id={`team-email-${index + 1}`}
+                                    placeholder="exemplo@exemplo.com"
+                                    type="email"
+                                    {...field}
+                                    ref={
+                                      index === fields.length - 1
+                                        ? lastInputRef
+                                        : undefined
+                                    }
+                                    className="relative"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="flex items-center gap-2">
+                            <div className="*:not-first:mt-2">
+                              <FormField
+                                control={form.control}
+                                name={`invites.${index}.name`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Nome</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        id={`team-name-${index + 1}`}
+                                        placeholder="Nome"
+                                        type="text"
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="*:not-first:mt-2">
+                              <FormField
+                                control={form.control}
+                                name={`invites.${index}.role`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Cargo</FormLabel>
+                                    <FormControl>
+                                      <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                      >
+                                        <SelectTrigger className="[&>span_svg]:text-muted-foreground/80 h-8 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_svg]:shrink-0">
+                                          <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent className="[&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]>span>svg]:shrink-0">
+                                          <SelectItem value="MEMBER">
+                                            <UserIcon
+                                              size={16}
+                                              aria-hidden="true"
+                                            />
+                                            <span className="truncate">
+                                              Membro
+                                            </span>
+                                          </SelectItem>
+                                          <SelectItem value="BILLING">
+                                            <CreditCardIcon
+                                              size={16}
+                                              aria-hidden="true"
+                                            />
+                                            <span className="truncate">
+                                              Faturamento
+                                            </span>
+                                          </SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
                           </div>
                         </div>
+                        {fields.length > 1 && (
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => remove(index)}
+                          >
+                            <Minus size={16} />
+                          </Button>
+                        )}
                       </div>
-                      {fields.length > 1 && (
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => remove(index)}
-                        >
-                          <Minus size={16} />
-                        </Button>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -239,9 +331,16 @@ export default function InviteMembersDialog({ org }: { org: string }) {
             <Button
               type="submit"
               className="w-full"
-              disabled={!form.formState.isValid}
+              disabled={!form.formState.isValid || isLoading}
             >
-              Enviar convite{fields.length > 1 ? `s` : ''}
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  Enviando convite{fields.length > 1 && 's'}
+                </>
+              ) : (
+                `Enviar convite${fields.length > 1 ? 's' : ''}`
+              )}
             </Button>
           </form>
         </Form>
