@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react'
 import { CircleUserRoundIcon } from 'lucide-react'
 import { useFileUpload } from '@/hooks/use-file-upload'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 type Props = {
   value?: string | null
@@ -33,7 +34,7 @@ export default function FileUploaderField({
           },
         ]
       : [],
-    maxSize: 1024 * 1024 * 1, // 1MB
+    maxSize: 1024 * 1024 * 2, // 2MB
   })
 
   useEffect(() => {
@@ -77,6 +78,9 @@ export default function FileUploaderField({
       }
     }
   }, [state.files, onChange, onFileSelected])
+
+  const hasErrors = state.errors.length > 0
+  const errorMessage = hasErrors ? state.errors.join(' ') : null
 
   return (
     <div className="mt-2 mb-2 flex flex-col items-start gap-2">
@@ -124,7 +128,10 @@ export default function FileUploaderField({
 
       {fileName && (
         <div className="inline-flex gap-2 text-xs">
-          <p className="text-muted-foreground max-w-32 truncate" aria-live="polite">
+          <p
+            className="text-muted-foreground max-w-32 truncate"
+            aria-live="polite"
+          >
             {fileName}
           </p>
           <button
@@ -141,9 +148,14 @@ export default function FileUploaderField({
       <p
         aria-live="polite"
         role="region"
-        className="text-muted-foreground mt-2 text-xs"
+        className={cn(
+          'mt-2 text-xs',
+          hasErrors ? 'text-destructive' : 'text-muted-foreground',
+        )}
       >
-        Carregue a imagem da sua organização. (Máx. 1MB)
+        {hasErrors
+          ? errorMessage
+          : 'Carregue a imagem da sua organização. (Máx. 2MB)'}
       </p>
     </div>
   )

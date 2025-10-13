@@ -87,11 +87,11 @@ export const useFileUpload = (
     (file: File | FileMetadata): string | null => {
       if (file instanceof File) {
         if (file.size > maxSize) {
-          return `File "${file.name}" exceeds the maximum size of ${formatBytes(maxSize)}.`
+          return `O arquivo "${file.name}" excede o tamanho máximo de ${formatBytes(maxSize)}.`
         }
       } else {
         if (file.size > maxSize) {
-          return `File "${file.name}" exceeds the maximum size of ${formatBytes(maxSize)}.`
+          return `O arquivo "${file.name}" excede o tamanho máximo de ${formatBytes(maxSize)}.`
         }
       }
 
@@ -112,7 +112,7 @@ export const useFileUpload = (
         })
 
         if (!isAccepted) {
-          return `File "${file instanceof File ? file.name : file.name}" is not an accepted file type.`
+          return `O arquivo "${file instanceof File ? file.name : file.name}" não é um tipo de arquivo aceito.`
         }
       }
 
@@ -187,7 +187,7 @@ export const useFileUpload = (
         maxFiles !== Infinity &&
         state.files.length + newFilesArray.length > maxFiles
       ) {
-        errors.push(`You can only upload a maximum of ${maxFiles} files.`)
+        errors.push(`Você só pode enviar um máximo de ${maxFiles} arquivos.`)
         setState((prev) => ({ ...prev, errors }))
         return
       }
@@ -213,8 +213,8 @@ export const useFileUpload = (
         if (file.size > maxSize) {
           errors.push(
             multiple
-              ? `Some files exceed the maximum size of ${formatBytes(maxSize)}.`
-              : `File exceeds the maximum size of ${formatBytes(maxSize)}.`
+              ? `Alguns arquivos excedem o tamanho máximo de ${formatBytes(maxSize)}.`
+              : `O arquivo excedeu o tamanho máximo de ${formatBytes(maxSize)}.`
           )
           return
         }
