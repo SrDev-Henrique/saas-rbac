@@ -1,0 +1,122 @@
+'use client'
+
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import type { GetProjectsResponse } from '@/http/get-projects'
+import { cn } from '@/lib/utils'
+import { formatDistanceToNow } from 'date-fns'
+import { CalendarDays, EyeIcon } from 'lucide-react'
+import { useEffect } from 'react'
+
+export default function ProjectsList({
+  projects,
+  isLoading,
+}: {
+  projects: GetProjectsResponse['projects']
+  isLoading: boolean
+}) {
+  const projectsList = projects ?? []
+
+  let length: number = projectsList.length
+  useEffect(() => {
+    length = projectsList.length
+  }, [projectsList])
+
+  return (
+    <div
+      className={cn(
+        'grid grid-cols-[repeat(auto-fit,minmax(360px,1fr))] gap-4',
+        length <= 2 && 'grid-cols-[repeat(auto-fit,minmax(360px,350px))]',
+      )}
+    >
+      {isLoading ? (
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Card key={index}>
+              <CardHeader>
+                <CardTitle>
+                  <Skeleton className="h-5 w-20 rounded-md" />
+                </CardTitle>
+                <CardDescription>
+                  <Skeleton className="h-20 w-full rounded-md" />
+                </CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <div className="flex w-full flex-col gap-4 self-end">
+                  <div className="flex w-full items-end justify-between">
+                    <div className="flex flex-col gap-1">
+                      <Skeleton className="h-5 w-20 rounded-md" />
+                      <div className="bg-secondary flex items-center space-x-1.5 rounded-full border px-1.5 py-1">
+                        <Skeleton className="size-5 rounded-full" />
+                        <Skeleton className="h-5 w-20 rounded-md" />
+                      </div>
+                    </div>
+                    <Skeleton className="h-5 w-10 rounded-md" />
+                  </div>
+                  <Skeleton className="h-10 w-full rounded-md" />
+                </div>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <>
+          {projectsList.map((project) => (
+            <Card className="justify-between" key={project.id}>
+              <CardHeader>
+                <CardTitle className="line-clamp-1">{project.name}</CardTitle>
+                <CardDescription className="line-clamp-4">
+                  {project.description}
+                </CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <div className="flex w-full flex-col gap-4 self-end">
+                  <div className="flex w-full items-end justify-between">
+                    <div className="flex flex-col gap-1">
+                      <p className="text-muted-foreground text-xs">
+                        Criado por:
+                      </p>
+                      <div className="bg-secondary flex items-center space-x-1.5 rounded-full border px-1.5 py-1">
+                        <Avatar className="size-5">
+                          <AvatarImage src={project.owner.avatarUrl ?? ''} />
+                          <AvatarFallback>
+                            {project.owner.name?.charAt(0).toUpperCase() ??
+                              '??'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="text-foreground text-sm font-medium hover:underline">
+                          {project.owner.name ?? 'Nome não informado'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-1.5 pb-2">
+                      <CalendarDays className="text-muted-foreground size-4" />
+                      <p className="text-muted-foreground text-xs">
+                        {formatDistanceToNow(project.createdAt, {
+                          addSuffix: true,
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex w-full">
+                    <Button className="w-full" variant="outline">
+                      <EyeIcon className="size-4" /> Visualizar
+                    </Button>
+                  </div>
+                </div>
+              </CardFooter>
+            </Card>
+          ))}
+        </>
+      )}
+    </div>
+  )
+}
