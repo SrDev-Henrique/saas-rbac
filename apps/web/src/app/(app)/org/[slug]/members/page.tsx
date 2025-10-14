@@ -1,5 +1,5 @@
 import Header from '@/components/header'
-import MembersClient from './members-clinet'
+import MembersClient from './members-client'
 
 export default function MembersPage() {
   return (

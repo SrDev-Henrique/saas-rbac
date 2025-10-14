@@ -336,10 +336,10 @@ export default function InviteMembersDialog({ org }: { org: string }) {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 size-4 animate-spin" />
-                  Enviando convite{fields.length > 1 && 's'}
+                  <p>Enviando convite{fields.length > 1 && 's'}</p>
                 </>
               ) : (
-                `Enviar convite${fields.length > 1 ? 's' : ''}`
+                <p>Enviar convite{fields.length > 1 && 's'}</p>
               )}
             </Button>
           </form>
