@@ -119,7 +119,11 @@ export default function Info({
               <>
                 <p className="font-medium">Nome</p>
                 <p className="bg-popover dark:bg-background border-border mt-1 truncate rounded-md border p-2 text-sm font-medium">
-                  {name}
+                  {name ?? (
+                    <span className="text-muted-foreground">
+                      Nenhuma informação
+                    </span>
+                  )}
                 </p>
               </>
             )}
