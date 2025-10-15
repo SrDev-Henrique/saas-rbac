@@ -12,16 +12,22 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import type { GetProjectsResponse } from '@/http/get-projects'
 import { cn } from '@/lib/utils'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, setDefaultOptions } from 'date-fns'
 import { CalendarDays, EyeIcon } from 'lucide-react'
 import { useEffect } from 'react'
+import ProjectCardOptions from './project-options'
+import { ptBR } from 'date-fns/locale'
+
+setDefaultOptions({ locale: ptBR })
 
 export default function ProjectsList({
   projects,
   isLoading,
+  slug,
 }: {
   projects: GetProjectsResponse['projects']
   isLoading: boolean
+  slug: string
 }) {
   const projectsList = projects ?? []
 
@@ -31,14 +37,9 @@ export default function ProjectsList({
   }, [projectsList])
 
   return (
-    <div
-      className={cn(
-        'grid grid-cols-[repeat(auto-fit,minmax(360px,1fr))] gap-4',
-        length <= 2 && 'grid-cols-[repeat(auto-fit,minmax(360px,350px))]',
-      )}
-    >
+    <div className="w-full">
       {isLoading ? (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
+        <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
           {Array.from({ length: 6 }).map((_, index) => (
             <Card key={index}>
               <CardHeader>
@@ -68,10 +69,16 @@ export default function ProjectsList({
           ))}
         </div>
       ) : (
-        <>
+        <div
+          className={cn(
+            'grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4',
+            length <= 2 && 'grid-cols-[repeat(auto-fit,minmax(360px,350px))]',
+          )}
+        >
           {projectsList.map((project) => (
-            <Card className="justify-between" key={project.id}>
-              <CardHeader>
+            <Card className="relative justify-between" key={project.id}>
+              <ProjectCardOptions orgSlug={slug} projectId={project.id} />
+              <CardHeader className="relative">
                 <CardTitle className="line-clamp-1">{project.name}</CardTitle>
                 <CardDescription className="line-clamp-4">
                   {project.description}
@@ -115,7 +122,7 @@ export default function ProjectsList({
               </CardFooter>
             </Card>
           ))}
-        </>
+        </div>
       )}
     </div>
   )

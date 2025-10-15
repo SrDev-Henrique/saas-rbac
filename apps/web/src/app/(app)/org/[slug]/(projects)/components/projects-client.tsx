@@ -58,7 +58,7 @@ export default function ProjectsClient({ orgSlug }: { orgSlug: string }) {
         onAuthorChange={setAuthor}
         authors={authors}
       />
-      <ProjectsList projects={filtered} isLoading={isLoading} />
+      <ProjectsList projects={filtered} isLoading={isLoading} slug={orgSlug} />
     </div>
   )
 }
