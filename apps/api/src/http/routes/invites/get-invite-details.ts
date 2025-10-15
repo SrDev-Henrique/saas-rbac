@@ -26,6 +26,14 @@ export async function getInviteDetails(app: FastifyInstance) {
               organization: z.object({
                 name: z.string(),
                 avatarUrl: z.url().nullable(),
+                slug: z.string(),
+                members: z.array(
+                  z.object({
+                    user: z.object({
+                      avatarUrl: z.url().nullable(),
+                    }),
+                  }),
+                ),
               }),
               author: z
                 .object({
@@ -63,6 +71,16 @@ export async function getInviteDetails(app: FastifyInstance) {
             select: {
               name: true,
               avatarUrl: true,
+              slug: true,
+              members: {
+                select: {
+                  user: {
+                    select: {
+                      avatarUrl: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
