@@ -17,6 +17,8 @@ import { CalendarDays, EyeIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import ProjectCardOptions from './project-options'
 import { ptBR } from 'date-fns/locale'
+import { useAbility } from '@/hooks/use-ability'
+import { projectSchema } from '@saas/auth/src/models/project'
 
 setDefaultOptions({ locale: ptBR })
 
@@ -35,6 +37,8 @@ export default function ProjectsList({
   useEffect(() => {
     length = projectsList.length
   }, [projectsList])
+
+  const permissions = useAbility({ slug })
 
   return (
     <div className="w-full">
@@ -75,57 +79,67 @@ export default function ProjectsList({
             length <= 2 && 'grid-cols-[repeat(auto-fit,minmax(360px,350px))]',
           )}
         >
-          {projectsList.map((project) => (
-            <Card className="relative justify-between" key={project.id}>
-              <ProjectCardOptions
-                initialValues={project}
-                orgSlug={slug}
-                projectId={project.id}
-              />
-              <CardHeader className="relative">
-                <CardTitle>{project.name}</CardTitle>
-                <CardDescription className="line-clamp-4">
-                  {project.description}
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="flex w-full flex-col gap-4 self-end">
-                  <div className="flex w-full items-end justify-between">
-                    <div className="flex flex-col gap-1">
-                      <p className="text-muted-foreground text-xs">
-                        Criado por:
-                      </p>
-                      <div className="bg-secondary flex items-center space-x-1.5 rounded-full border px-1.5 py-1">
-                        <Avatar className="size-5">
-                          <AvatarImage src={project.owner.avatarUrl ?? ''} />
-                          <AvatarFallback>
-                            {project.owner.name?.charAt(0).toUpperCase() ??
-                              '??'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <p className="text-foreground text-sm font-medium hover:underline">
-                          {project.owner.name ?? 'Nome não informado'}
+          {projectsList.map((project) => {
+            const authProject = projectSchema.parse(project)
+            const canDeleteProject = permissions.data?.can(
+              'delete',
+              authProject,
+            )
+            const canEditProject = permissions.data?.can('update', authProject)
+            return (
+              <Card className="relative justify-between" key={project.id}>
+                <ProjectCardOptions
+                  initialValues={project}
+                  orgSlug={slug}
+                  projectId={project.id}
+                  canDeleteProject={canDeleteProject}
+                  canEditProject={canEditProject}
+                />
+                <CardHeader className="relative">
+                  <CardTitle>{project.name}</CardTitle>
+                  <CardDescription className="line-clamp-4">
+                    {project.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter>
+                  <div className="flex w-full flex-col gap-4 self-end">
+                    <div className="flex w-full items-end justify-between">
+                      <div className="flex flex-col gap-1">
+                        <p className="text-muted-foreground text-xs">
+                          Criado por:
+                        </p>
+                        <div className="bg-secondary flex items-center space-x-1.5 rounded-full border px-1.5 py-1">
+                          <Avatar className="size-5">
+                            <AvatarImage src={project.owner.avatarUrl ?? ''} />
+                            <AvatarFallback>
+                              {project.owner.name?.charAt(0).toUpperCase() ??
+                                '??'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <p className="text-foreground text-sm font-medium hover:underline">
+                            {project.owner.name ?? 'Nome não informado'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-1.5 pb-2">
+                        <CalendarDays className="text-muted-foreground size-4" />
+                        <p className="text-muted-foreground text-xs">
+                          {formatDistanceToNow(project.createdAt, {
+                            addSuffix: true,
+                          })}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-1.5 pb-2">
-                      <CalendarDays className="text-muted-foreground size-4" />
-                      <p className="text-muted-foreground text-xs">
-                        {formatDistanceToNow(project.createdAt, {
-                          addSuffix: true,
-                        })}
-                      </p>
+                    <div className="flex w-full">
+                      <Button className="w-full" variant="outline">
+                        <EyeIcon className="size-4" /> Visualizar
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex w-full">
-                    <Button className="w-full" variant="outline">
-                      <EyeIcon className="size-4" /> Visualizar
-                    </Button>
-                  </div>
-                </div>
-              </CardFooter>
-            </Card>
-          ))}
+                </CardFooter>
+              </Card>
+            )
+          })}
         </div>
       )}
     </div>

@@ -18,10 +18,14 @@ export default function ProjectCardOptions({
   orgSlug,
   projectId,
   initialValues,
+  canDeleteProject,
+  canEditProject,
 }: {
   orgSlug: string
   projectId: string
   initialValues: initialValues
+  canDeleteProject: boolean | undefined
+  canEditProject: boolean | undefined
 }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -65,7 +69,8 @@ export default function ProjectCardOptions({
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <button
-                className="text-primary hover:text-primary focus:text-primary hover:bg-primary/10 focus:bg-primary/10 w-full"
+                disabled={!canEditProject}
+                className="text-primary hover:text-primary focus:text-primary hover:bg-primary/10 focus:bg-primary/10 w-full disabled:opacity-50"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
@@ -83,7 +88,8 @@ export default function ProjectCardOptions({
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <button
-                className="text-destructive hover:text-destructive focus:text-destructive hover:bg-destructive/10 focus:bg-destructive/10 w-full"
+                disabled={!canDeleteProject}
+                className="text-destructive hover:text-destructive focus:text-destructive hover:bg-destructive/10 focus:bg-destructive/10 w-full disabled:opacity-50"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
