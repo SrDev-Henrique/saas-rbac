@@ -22,7 +22,7 @@ export default function AvatarGroup({
     >
       <div className="flex -space-x-2">
         {avatarUrls.slice(0, 4).map((avatarUrl, index) => (
-          <div key={avatarUrl}>
+          <div key={index}>
             <Avatar className={size === 'sm' ? 'size-6' : 'size-8'}>
               <AvatarImage src={avatarUrl} />
               {names ? (
@@ -42,7 +42,7 @@ export default function AvatarGroup({
           variant="secondary"
           className={cn(
             'text-muted-foreground hover:text-foreground flex items-center justify-center rounded-full bg-transparent px-3 text-xs shadow-none hover:bg-transparent',
-            size === 'sm' ? 'px-2 text-xs size-5' : 'px-3 text-xs',
+            size === 'sm' ? 'size-5 px-2 text-xs' : 'px-3 text-xs',
           )}
         >
           +{avatarUrls.length - 4}
