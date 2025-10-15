@@ -24,7 +24,15 @@ import {
 import { signInWithGitHub } from '../actions'
 import { useSearchParams } from 'next/navigation'
 
-export default function SignInForm() {
+export default function SignInForm({
+  isDialog,
+  initialValues,
+  invite,
+}: {
+  isDialog?: boolean
+  initialValues?: z.infer<typeof signInFormSchema>
+  invite?: string
+}) {
   const [{ success, message }, setFormState] = useState<{
     success: boolean
     message: string | null
@@ -40,8 +48,8 @@ export default function SignInForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: initialValues?.email ?? '',
+      password: initialValues?.password ?? '',
     },
   })
 
@@ -56,7 +64,9 @@ export default function SignInForm() {
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     startTransition(async () => {
-      const state = (await SignInWithPassword(data)) as {
+      const state = (await (isDialog
+        ? SignInWithPassword(data, invite)
+        : SignInWithPassword(data))) as {
         success: boolean
         message: string | null
         errors: unknown
@@ -137,24 +147,28 @@ export default function SignInForm() {
           <Separator />
         </form>
       </Form>
-      <Button
-        variant="outline"
-        className="w-full cursor-pointer"
-        disabled={isPending}
-        onClick={() => signInWithGitHub()}
-      >
-        <GithubIcon />
-        Entrar com GitHub
-      </Button>
+      {!isDialog && (
+        <div className="flex flex-col gap-4">
+          <Button
+            variant="outline"
+            className="w-full cursor-pointer"
+            disabled={isPending}
+            onClick={() => signInWithGitHub()}
+          >
+            <GithubIcon />
+            Entrar com GitHub
+          </Button>
 
-      <Button
-        variant="link"
-        className="w-full cursor-pointer"
-        asChild
-        disabled={isPending}
-      >
-        <Link href="/sign-up">Não tenho uma conta</Link>
-      </Button>
+          <Button
+            variant="link"
+            className="w-full cursor-pointer"
+            asChild
+            disabled={isPending}
+          >
+            <Link href="/sign-up">Não tenho uma conta</Link>
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

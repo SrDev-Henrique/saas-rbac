@@ -6,7 +6,7 @@ import { signUpWithPassword } from '@/http/sign-up'
 import { HTTPError } from 'ky'
 import { redirect } from 'next/navigation'
 
-export async function SignUpAction(data: z.infer<typeof signUpFormSchema>) {
+export async function SignUpAction(data: z.infer<typeof signUpFormSchema>, invite?: string) {
   const result = signUpFormSchema.safeParse(data)
 
   if (!result.success) {
@@ -36,5 +36,9 @@ export async function SignUpAction(data: z.infer<typeof signUpFormSchema>) {
     return { success: false, message: 'Erro ao criar conta', errors: null }
   }
 
-  redirect('/sign-in')
+  if (invite) {
+    redirect(`/invite/${invite}`)
+  } else {
+    redirect('/sign-in')
+  }
 }

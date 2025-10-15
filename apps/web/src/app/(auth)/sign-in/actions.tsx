@@ -11,6 +11,7 @@ import { signInFormSchema } from '@/lib/utils'
 
 export async function SignInWithPassword(
   data: z.infer<typeof signInFormSchema>,
+  invite?: string,
 ) {
   const result = signInFormSchema.safeParse(data)
 
@@ -51,5 +52,9 @@ export async function SignInWithPassword(
     }
   }
 
-  redirect('/')
+  if (invite) {
+    redirect(`/invite/${invite}`)
+  } else {
+    redirect('/')
+  }
 }

@@ -10,7 +10,7 @@ export async function acceptInvite(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .post(
-      '/invites/:invieId/accept',
+      '/invites/:inviteId/accept',
       {
         schema: {
           tags: ['Invites'],
@@ -22,6 +22,7 @@ export async function acceptInvite(app: FastifyInstance) {
           response: {
             200: z.object({
               message: z.string(),
+              organizationSlug: z.string(),
             }),
           },
         },
@@ -34,8 +35,11 @@ export async function acceptInvite(app: FastifyInstance) {
           where: {
             id: inviteId,
           },
-          include: {
-            organization: true,
+          select: {
+            id: true,
+            email: true,
+            role: true,
+            organizationId: true,
           },
         })
 
@@ -53,27 +57,49 @@ export async function acceptInvite(app: FastifyInstance) {
           throw new BadRequestError('Usuário não encontrado.')
         }
 
-        if (invite.email !== user.email) {
-          throw new BadRequestError('O email do convite não corresponde ao email do usuário.')
+        if (
+          invite.email.trim().toLowerCase() !==
+          (user.email ?? '').trim().toLowerCase()
+        ) {
+          throw new BadRequestError(
+            'O email do convite não corresponde ao email do usuário.',
+          )
         }
 
-        await prisma.$transaction([
-          prisma.member.create({
-            data: {
+        const organization = await prisma.organization.findUnique({
+          where: { id: invite.organizationId },
+          select: { slug: true },
+        })
+
+        if (!organization) {
+          throw new BadRequestError('Organização não encontrada.')
+        }
+
+        await prisma.$transaction(async (tx) => {
+          await tx.member.upsert({
+            where: {
+              organizationId_userId: {
+                organizationId: invite.organizationId,
+                userId,
+              },
+            },
+            update: {},
+            create: {
               userId,
               organizationId: invite.organizationId,
               role: invite.role,
             },
-          }),
-          prisma.invite.delete({
+          })
+          await tx.invite.delete({
             where: {
               id: inviteId,
             },
-          }),
-        ])
+          })
+        })
 
         return reply.status(200).send({
           message: 'Convite aceito com sucesso',
+          organizationSlug: organization.slug,
         })
       },
     )

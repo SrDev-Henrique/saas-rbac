@@ -1,4 +1,7 @@
+import { getUser, isAuthenticated } from '@/auth/auth'
 import AvatarGroup from '@/components/avatar-group'
+import CreateAccountDialog from '@/components/create-account-dialog'
+import SignInDialog from '@/components/sign-in-dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,7 +11,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { acceptInvite } from '@/http/accept-invite'
 import { getInvite } from '@/http/get-invite'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 interface invitePageProps {
   params: {
@@ -17,6 +23,8 @@ interface invitePageProps {
 }
 
 export default async function InvitePage({ params }: invitePageProps) {
+  const isUserAuthenticated = await isAuthenticated()
+
   const invite = await params
 
   const inviteData = await getInvite({ inviteId: invite.id })
@@ -33,6 +41,30 @@ export default async function InvitePage({ params }: invitePageProps) {
   const members = organization.members
 
   if (!author || author.name === null || !organization) return null
+
+  let userWithSameEmail = false
+
+  if (isUserAuthenticated) {
+    const user = await getUser()
+    if (user) {
+      userWithSameEmail = user.email === inviteData.invite.email
+    }
+  }
+
+  async function acceptInviteAction() {
+    'use server'
+    const cookieStore = await cookies()
+    cookieStore.set('inviteId', invite.id, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    })
+
+    const { organizationSlug } = await acceptInvite({ inviteId: invite.id })
+
+    cookieStore.delete('inviteId')
+
+    redirect(`/org/${organizationSlug}`)
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col justify-center space-y-4 p-4 xl:px-0">
@@ -73,7 +105,7 @@ export default async function InvitePage({ params }: invitePageProps) {
 
       <div className="bg-card text-card-foreground mx-auto w-full max-w-md rounded-xl border py-6 shadow-sm">
         <div className="mx-auto flex w-fit flex-col gap-6">
-          <div className="flex gap-4">
+          <div className="mx-auto flex w-fit gap-4">
             <Avatar className="h-15 w-15 rounded-md">
               {organization.avatarUrl && (
                 <AvatarImage src={organization.avatarUrl} />
@@ -106,18 +138,46 @@ export default async function InvitePage({ params }: invitePageProps) {
               </div>
             </div>
           </div>
-          <div className="flex w-full items-center justify-between">
-            <Button
-              size="sm"
-              className="text-chart-2 border-chart-2 hover:text-chart-2 focus:text-chart-2"
-              variant="outline"
-            >
-              Aceitar convite
-            </Button>
-            <Button size="sm" variant="default">
-              Rejeitar convite
-            </Button>
-          </div>
+          {userWithSameEmail ? (
+            <div className="flex w-full items-center justify-between">
+              <form action={acceptInviteAction}>
+                <Button
+                  size="sm"
+                  className="text-chart-2 border-chart-2 hover:text-chart-2 focus:text-chart-2"
+                  variant="outline"
+                  type="submit"
+                >
+                  Aceitar convite
+                </Button>
+              </form>
+              <Button size="sm" variant="default">
+                Rejeitar convite
+              </Button>
+            </div>
+          ) : (
+            <div className="flex w-full max-w-xs flex-col items-center justify-between space-y-4 text-balance">
+              <p className="text-muted-foreground text-center text-sm font-medium">
+                Você precisa estar logado com o email{' '}
+                <span className="text-chart-2">{inviteData.invite.email}</span>{' '}
+                para aceitar o convite, caso não tenha uma conta com este email,
+                por favor, clique em{' '}
+                <span className="text-chart-2 hover:underline">
+                  criar conta
+                </span>
+                .
+              </p>
+              <div className="flex w-full items-center justify-center gap-4">
+                <SignInDialog
+                  initialValues={{
+                    email: inviteData.invite.email,
+                    password: '',
+                  }}
+                  invite={inviteData.invite.id}
+                />
+                <CreateAccountDialog invite={inviteData.invite.id} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

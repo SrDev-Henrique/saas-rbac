@@ -24,7 +24,13 @@ import { Loader2 } from 'lucide-react'
 import { signInWithGitHub } from '../actions'
 import { useSearchParams } from 'next/navigation'
 
-export default function SignUpForm() {
+export default function SignUpForm({
+  isDialog,
+  invite,
+}: {
+  isDialog?: boolean
+  invite?: string
+}) {
   const formSchema = signUpFormSchema
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -58,7 +64,9 @@ export default function SignUpForm() {
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     startTransition(async () => {
-      const state = (await SignUpAction(data)) as {
+      const state = (await (isDialog
+        ? SignUpAction(data, invite)
+        : SignUpAction(data))) as {
         success: boolean
         message: string | null
         errors: unknown
@@ -162,24 +170,28 @@ export default function SignUpForm() {
           <Separator />
         </form>
       </Form>
-      <Button
-        variant="outline"
-        className="w-full cursor-pointer"
-        disabled={isPending}
-        onClick={() => signInWithGitHub()}
-      >
-        <GithubIcon />
-        Criar conta com GitHub
-      </Button>
+      {!isDialog && (
+        <div className="flex flex-col gap-4">
+          <Button
+            variant="outline"
+            className="w-full cursor-pointer"
+            disabled={isPending}
+            onClick={() => signInWithGitHub()}
+          >
+            <GithubIcon />
+            Criar conta com GitHub
+          </Button>
 
-      <Button
-        disabled={isPending}
-        variant="link"
-        className="w-full cursor-pointer"
-        asChild
-      >
-        <Link href="/sign-in">Já tenho uma conta</Link>
-      </Button>
+          <Button
+            disabled={isPending}
+            variant="link"
+            className="w-full cursor-pointer"
+            asChild
+          >
+            <Link href="/sign-in">Já tenho uma conta</Link>
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
