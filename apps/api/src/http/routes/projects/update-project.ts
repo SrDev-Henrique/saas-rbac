@@ -24,8 +24,8 @@ export async function updateProject(app: FastifyInstance) {
             projectId: z.string(),
           }),
           body: z.object({
-            name: z.string(),
-            description: z.string(),
+            name: z.string().optional(),
+            description: z.string().optional(),
           }),
           response: {
             204: z.null(),
@@ -61,13 +61,28 @@ export async function updateProject(app: FastifyInstance) {
 
         const { name, description } = request.body
 
+        const hasName = typeof name === 'string' && name.trim().length > 0
+        const hasDescription =
+          typeof description === 'string' && description.trim().length > 0
+
+        if (!hasName && !hasDescription) {
+          throw new BadRequestError(
+            'É necessário preencher pelo menos o nome ou a descrição.',
+          )
+        }
+
+        const validName = hasName ? name! : project.name
+        const validDescription = hasDescription
+          ? description!
+          : project.description
+
         await prisma.project.update({
           where: {
             id: projectId,
           },
           data: {
-            name,
-            description,
+            name: validName,
+            description: validDescription,
           },
         })
 

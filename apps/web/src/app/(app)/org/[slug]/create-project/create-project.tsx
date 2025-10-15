@@ -95,7 +95,7 @@ export default function CreateProjectForm() {
 
         if (state.success) {
           form.reset()
-          queryClient.invalidateQueries({ queryKey: ['projects'] })
+          queryClient.invalidateQueries({ queryKey: ['projects', slug] })
         }
       } catch (err: any) {
         setFormState({
@@ -145,7 +145,7 @@ export default function CreateProjectForm() {
             <Button
               type="submit"
               className="w-full cursor-pointer"
-              disabled={isPending}
+              disabled={isPending || !form.formState.isValid}
             >
               {isPending ? (
                 <Loader2 className="size-4 animate-spin" />

@@ -77,9 +77,13 @@ export default function ProjectsList({
         >
           {projectsList.map((project) => (
             <Card className="relative justify-between" key={project.id}>
-              <ProjectCardOptions orgSlug={slug} projectId={project.id} />
+              <ProjectCardOptions
+                initialValues={project}
+                orgSlug={slug}
+                projectId={project.id}
+              />
               <CardHeader className="relative">
-                <CardTitle className="line-clamp-1">{project.name}</CardTitle>
+                <CardTitle>{project.name}</CardTitle>
                 <CardDescription className="line-clamp-4">
                   {project.description}
                 </CardDescription>

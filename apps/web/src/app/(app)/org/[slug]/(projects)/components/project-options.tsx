@@ -1,4 +1,4 @@
-import { BoltIcon, EllipsisVerticalIcon, TrashIcon } from 'lucide-react'
+import { BoltIcon, EllipsisIcon, TrashIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -12,17 +12,21 @@ import { useState } from 'react'
 import { deleteProject } from '@/http/delete-project'
 import DeleteProjectConfirmation from './delete-project-confirmation'
 import { queryClient } from '@/lib/react-query'
+import EditProjectDialog, { initialValues } from './edit-project-dialog'
 
 export default function ProjectCardOptions({
   orgSlug,
   projectId,
+  initialValues,
 }: {
   orgSlug: string
   projectId: string
+  initialValues: initialValues
 }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
 
   async function handleDeleteProject() {
     try {
@@ -49,7 +53,7 @@ export default function ProjectCardOptions({
       >
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="px-2.5 pe-3.5">
-            <EllipsisVerticalIcon
+            <EllipsisIcon
               className="-me-1 opacity-60"
               size={16}
               aria-hidden="true"
@@ -59,9 +63,18 @@ export default function ProjectCardOptions({
 
         <DropdownMenuContent>
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
-              Editar
+            <DropdownMenuItem asChild>
+              <button
+                className="text-primary hover:text-primary focus:text-primary hover:bg-primary/10 focus:bg-primary/10 w-full"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setIsEditing(true)
+                }}
+              >
+                <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
+                Editar
+              </button>
             </DropdownMenuItem>
           </DropdownMenuGroup>
 
@@ -90,6 +103,14 @@ export default function ProjectCardOptions({
         onDelete={handleDeleteProject}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
+      />
+
+      <EditProjectDialog
+        orgSlug={orgSlug}
+        projectId={projectId}
+        dialogOpen={isEditing}
+        setDialogOpen={setIsEditing}
+        initialValues={initialValues}
       />
     </div>
   )

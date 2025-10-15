@@ -32,3 +32,13 @@ export const signUpFormSchema = z
     message: 'As senhas não coincidem',
     path: ['confirmPassword'],
   })
+
+export const editProjectSchema = z
+  .object({
+    name: z.string().optional(),
+    description: z.string().optional(),
+  })
+  .refine((data) => data.name?.trim() || data.description?.trim(), {
+    message: 'É necessário preencher pelo menos o nome ou a descrição.',
+    path: ['name'],
+  })

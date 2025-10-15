@@ -182,25 +182,26 @@ export default function MembersTable({
                       </Badge>
                     )}
                   </TableCell>
-                  {canTransferOwnership && (
-                    <TableCell
-                      className={
-                        item.userId === currentOrganization!.ownerId
-                          ? 'hidden'
-                          : ''
-                      }
-                    >
-                      <TransferConfirmation
-                        Icon={<ArrowLeftRight />}
-                        name={item.name}
-                        onTransfer={() =>
-                          handleTransferOrganization(item.userId)
+                  {canTransferOwnership &&
+                    currentOrganization?.ownerId !== null && (
+                      <TableCell
+                        className={
+                          item.userId === currentOrganization!.ownerId
+                            ? 'hidden'
+                            : ''
                         }
-                        isTransferring={isTransferring}
-                      />
-                    </TableCell>
-                  )}
-                  {canRemoveMember && (
+                      >
+                        <TransferConfirmation
+                          Icon={<ArrowLeftRight />}
+                          name={item.name}
+                          onTransfer={() =>
+                            handleTransferOrganization(item.userId)
+                          }
+                          isTransferring={isTransferring}
+                        />
+                      </TableCell>
+                    )}
+                  {canRemoveMember && currentOrganization?.ownerId !== null && (
                     <TableCell
                       className={
                         item.userId === currentOrganization!.ownerId ||
