@@ -20,6 +20,8 @@ import {
 } from '../ui/dialog'
 import { Skeleton } from '../ui/skeleton'
 
+setDefaultOptions({ locale: ptBR })
+
 interface Invite {
   id: string
   email: string
@@ -43,7 +45,6 @@ export default function Invite({
   isLoading: boolean
 }) {
   const role = invite.role === 'BILLING' ? 'Faturamento' : 'Membro'
-  setDefaultOptions({ locale: ptBR })
 
   async function handleRevokeInvite(inviteId: string) {
     try {

@@ -10,7 +10,7 @@ export default async function Projects({
   const awaitedParams = await params
 
   return (
-    <div className="space-y-4 p-4 pb-22 xl:px-0">
+    <div className="relative space-y-4 p-4 pb-22 xl:px-0">
       <Header slug={awaitedParams.slug} />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Projetos</h1>

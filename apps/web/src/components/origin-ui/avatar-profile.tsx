@@ -23,16 +23,18 @@ import { getUser } from '@/auth/auth'
 
 export default async function AvatarProfile() {
   const user = await getUser()
+  const firstAndLastLetter =
+    user.name
+      ?.split(' ')
+      .map((name) => name.charAt(0).toUpperCase())
+      .join('') ?? ''
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
             <AvatarImage src={user.avatarUrl} alt="Profile image" />
-            <AvatarFallback>
-              {user.name.charAt(0).toUpperCase() +
-                user.name.charAt(1).toUpperCase()}
-            </AvatarFallback>
+            <AvatarFallback>{firstAndLastLetter}</AvatarFallback>
           </Avatar>
           <ChevronDownIcon
             size={16}

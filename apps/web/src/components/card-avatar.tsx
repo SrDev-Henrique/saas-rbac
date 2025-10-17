@@ -22,7 +22,10 @@ export default function CardAvatar({
         <Avatar>
           <AvatarImage src={avatarUrl} alt="Profile image" />
           <AvatarFallback>
-            {name.charAt(0).toUpperCase() + name.charAt(1).toUpperCase()}
+            {name
+              ?.split(' ')
+              .map((name) => name.charAt(0).toUpperCase())
+              .join('') ?? ''}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col items-start space-y-0.5">
@@ -43,7 +46,10 @@ export default function CardAvatar({
               <Avatar>
                 <AvatarImage src={avatarUrl} alt="Profile image" />
                 <AvatarFallback>
-                  {name.charAt(0).toUpperCase() + name.charAt(1).toUpperCase()}
+                  {name
+                    ?.split(' ')
+                    .map((name) => name.charAt(0).toUpperCase())
+                    .join('') ?? ''}
                 </AvatarFallback>
               </Avatar>
               <div className="space-y-0.5">

@@ -143,8 +143,10 @@ export default function MembersTable({
                       <Avatar className="size-9">
                         <AvatarImage src={item.avatarUrl} />
                         <AvatarFallback>
-                          {item.name.charAt(0).toUpperCase() +
-                            item.name.charAt(1).toUpperCase()}
+                          {item?.name
+                            ?.split(' ')
+                            .map((name) => name.charAt(0).toUpperCase())
+                            .join('') ?? ''}
                         </AvatarFallback>
                       </Avatar>
                       <div>

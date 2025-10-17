@@ -8,7 +8,7 @@ export default async function ProjectPage({
   const awaitedParams = await params
 
   return (
-    <div className="space-y-4 p-4 xl:px-0">
+    <div className="relative space-y-4 p-4 xl:px-0">
       <Header slug={awaitedParams.slug} />
       <h1>Projeto</h1>
     </div>

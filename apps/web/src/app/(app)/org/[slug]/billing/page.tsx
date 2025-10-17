@@ -3,7 +3,7 @@ import Header from '@/components/header'
 
 export default function BillingPage() {
   return (
-    <div className="space-y-4 p-4 xl:px-0">
+    <div className="relative space-y-4 p-4 xl:px-0">
       <Header />
       <Billing />
     </div>

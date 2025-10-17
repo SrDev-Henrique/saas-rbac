@@ -6,8 +6,10 @@ import { ability } from '@/auth/auth-client'
 import ThemeSwitcher from './origin-ui/theme-switcher'
 import Link from 'next/link'
 import ProjectsSwitcher from './projects-switcher'
+import { getUser } from '@/auth/auth'
+import PendingInvites from './pending-invites'
 
-export default async function   Header({
+export default async function Header({
   slug,
   canGetProjects,
 }: {
@@ -15,7 +17,8 @@ export default async function   Header({
   canGetProjects?: boolean
 }) {
   const permissions = await ability({ slug: slug ?? '' })
-
+  const user = await getUser()
+  const userId = user?.id
   return (
     <div className="bg-popover mx-auto flex max-w-[1200px] items-center justify-between rounded-md px-4 py-2">
       <div className="flex cursor-pointer items-center gap-3">
@@ -36,6 +39,8 @@ export default async function   Header({
       </div>
 
       <div className="flex items-center gap-4">
+        {userId && <PendingInvites userId={userId} />}
+
         <ThemeSwitcher />
 
         <AvatarProfile />

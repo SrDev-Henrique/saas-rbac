@@ -85,8 +85,10 @@ export default async function InvitePage({ params }: invitePageProps) {
               <Avatar className="size-16">
                 {author?.avatarUrl && <AvatarImage src={author.avatarUrl} />}
                 <AvatarFallback>
-                  {author.name.charAt(0).toUpperCase() +
-                    author.name.charAt(1).toUpperCase()}
+                  {author?.name
+                    ?.split(' ')
+                    .map((name) => name.charAt(0).toUpperCase())
+                    .join('') ?? ''}
                 </AvatarFallback>
               </Avatar>
             </div>
@@ -118,8 +120,10 @@ export default async function InvitePage({ params }: invitePageProps) {
                 <AvatarImage src={organization.avatarUrl} />
               )}
               <AvatarFallback>
-                {organization.name.charAt(0).toUpperCase() +
-                  organization.name.charAt(1).toUpperCase()}
+                {organization.name
+                  ?.split(' ')
+                  .map((name) => name.charAt(0).toUpperCase())
+                  .join('') ?? ''}
               </AvatarFallback>
             </Avatar>
             <div className="flex grow flex-col gap-2">

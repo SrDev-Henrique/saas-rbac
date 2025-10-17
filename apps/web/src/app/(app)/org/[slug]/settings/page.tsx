@@ -7,7 +7,7 @@ export default async function SettingsPage({
   params: { slug: string }
 }) {
   return (
-    <div className="space-y-4 p-4 xl:px-0">
+    <div className="relative space-y-4 p-4 xl:px-0">
       <Header />
       <OrganizationSettingsClient slug={params.slug} />
     </div>
