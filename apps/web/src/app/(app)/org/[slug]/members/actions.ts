@@ -65,12 +65,15 @@ export async function createInviteAction(
     const partialSuccess = numSuccessful > 0 && numSuccessful < total
     const allSucceeded = numSuccessful === total
     const anySucceeded = numSuccessful > 0
+    const allSucceededWithOnlyOneInvite = numSuccessful === 1 && total === 1
 
-    const message = allSucceeded
-      ? 'Convites enviados com sucesso'
-      : partialSuccess
-        ? `${numSuccessful} convite(s) enviados, ${total - numSuccessful} falharam`
-        : 'Erro ao enviar convites'
+    const message = allSucceededWithOnlyOneInvite
+      ? 'Convite enviado com sucesso'
+      : allSucceeded
+        ? 'Convites enviados com sucesso'
+        : partialSuccess
+          ? `${numSuccessful} convite(s) enviados, ${total - numSuccessful} falharam`
+          : 'Erro ao enviar convites'
 
     return {
       success: anySucceeded,
