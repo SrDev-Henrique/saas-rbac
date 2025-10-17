@@ -72,7 +72,10 @@ export default function Invite({
           <Avatar>
             <AvatarImage src={invite.author?.avatarUrl ?? ''} />
             <AvatarFallback>
-              {invite.author?.name?.charAt(0).toUpperCase()}
+              {invite.author?.name
+                ?.split(' ')
+                .map((name) => name.charAt(0).toUpperCase())
+                .join('') ?? ''}
             </AvatarFallback>
           </Avatar>
           <div className="flex grow flex-col gap-3">
