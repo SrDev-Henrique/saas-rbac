@@ -73,9 +73,11 @@ export default async function InvitePage({ params }: invitePageProps) {
 
   return (
     <div className="flex min-h-screen w-full flex-col justify-center space-y-4 p-4 xl:px-0">
-      <h1 className="text-center text-2xl font-bold">
-        Você recebeu um convite
-      </h1>
+      {userWithSameEmail && (
+        <h1 className="text-center text-2xl font-bold">
+          Você recebeu um convite
+        </h1>
+      )}
       <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle>
