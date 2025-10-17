@@ -16,9 +16,10 @@ interface GetInviteResponse {
       name: string
       avatarUrl: string | null
       slug: string
-      members: {    
+      members: {
         user: {
           avatarUrl: string | null
+          name: string | null
         }
       }[]
     }

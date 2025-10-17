@@ -25,14 +25,14 @@ export default function AvatarGroup({
           <div key={index}>
             <Avatar className={size === 'sm' ? 'size-6' : 'size-8'}>
               <AvatarImage src={avatarUrl} />
-              {names ? (
-                <AvatarFallback>
-                  {names?.[index]?.charAt(0).toUpperCase() +
-                    names?.[index]?.charAt(1).toUpperCase()}
-                </AvatarFallback>
-              ) : (
-                <AvatarFallback />
-              )}
+              <AvatarFallback>
+                {(() => {
+                  const name = names?.[index] ?? ''
+                  const first = name?.charAt(0)?.toUpperCase() ?? ''
+                  const second = name?.charAt(1)?.toUpperCase() ?? ''
+                  return `${first}${second}`
+                })()}
+              </AvatarFallback>
             </Avatar>
           </div>
         ))}

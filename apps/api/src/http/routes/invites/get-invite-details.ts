@@ -31,6 +31,7 @@ export async function getInviteDetails(app: FastifyInstance) {
                   z.object({
                     user: z.object({
                       avatarUrl: z.url().nullable(),
+                      name: z.string().nullable(),
                     }),
                   }),
                 ),
@@ -77,6 +78,7 @@ export async function getInviteDetails(app: FastifyInstance) {
                   user: {
                     select: {
                       avatarUrl: true,
+                      name: true,
                     },
                   },
                 },

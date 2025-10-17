@@ -4,6 +4,7 @@ import CreateAccountDialog from '@/components/create-account-dialog'
 import SignInDialog from '@/components/sign-in-dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { AcceptInviteButton } from '@/components/accept-invite-button'
 import {
   Card,
   CardDescription,
@@ -39,6 +40,10 @@ export default async function InvitePage({ params }: invitePageProps) {
   const author = inviteData.invite.author
   const organization = inviteData.invite.organization
   const members = organization.members
+  const membersNames = members.map((member) => {
+    const rawName = member.user.name
+    return typeof rawName === 'string' ? rawName : 'Anônimo'
+  })
 
   if (!author || author.name === null || !organization) return null
 
@@ -126,6 +131,7 @@ export default async function InvitePage({ params }: invitePageProps) {
                       avatarUrls={members.map(
                         (member) => member.user.avatarUrl!,
                       )}
+                      names={membersNames}
                       size="sm"
                       shadow={false}
                     />
@@ -141,14 +147,7 @@ export default async function InvitePage({ params }: invitePageProps) {
           {userWithSameEmail ? (
             <div className="flex w-full items-center justify-between">
               <form action={acceptInviteAction}>
-                <Button
-                  size="sm"
-                  className="text-chart-2 border-chart-2 hover:text-chart-2 focus:text-chart-2"
-                  variant="outline"
-                  type="submit"
-                >
-                  Aceitar convite
-                </Button>
+                <AcceptInviteButton />
               </form>
               <Button size="sm" variant="default">
                 Rejeitar convite
