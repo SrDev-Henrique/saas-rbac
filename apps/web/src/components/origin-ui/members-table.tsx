@@ -85,7 +85,7 @@ export default function MembersTable({
 
   return (
     <div>
-      {isLoading ? (
+      {isLoading || currentOrganization === null ? (
         <Card className="bg-background min-h-[300px] px-2">
           <Table>
             <TableHeader>
@@ -184,26 +184,25 @@ export default function MembersTable({
                       </Badge>
                     )}
                   </TableCell>
-                  {canTransferOwnership &&
-                    currentOrganization?.ownerId !== null && (
-                      <TableCell
-                        className={
-                          item.userId === currentOrganization!.ownerId
-                            ? 'hidden'
-                            : ''
+                  {canTransferOwnership && currentOrganization !== null && (
+                    <TableCell
+                      className={
+                        item.userId === currentOrganization!.ownerId
+                          ? 'hidden'
+                          : ''
+                      }
+                    >
+                      <TransferConfirmation
+                        Icon={<ArrowLeftRight />}
+                        name={item.name}
+                        onTransfer={() =>
+                          handleTransferOrganization(item.userId)
                         }
-                      >
-                        <TransferConfirmation
-                          Icon={<ArrowLeftRight />}
-                          name={item.name}
-                          onTransfer={() =>
-                            handleTransferOrganization(item.userId)
-                          }
-                          isTransferring={isTransferring}
-                        />
-                      </TableCell>
-                    )}
-                  {canRemoveMember && currentOrganization?.ownerId !== null && (
+                        isTransferring={isTransferring}
+                      />
+                    </TableCell>
+                  )}
+                  {canRemoveMember && currentOrganization !== null && (
                     <TableCell
                       className={
                         item.userId === currentOrganization!.ownerId ||
