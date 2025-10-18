@@ -11,6 +11,8 @@ import { updateMember } from '@/http/update-member'
 import { queryClient } from '@/lib/react-query'
 import { Role } from '@saas/auth'
 import { CreditCardIcon, UserIcon } from 'lucide-react'
+import { toast } from 'sonner'
+import Toast from '../toast'
 
 export default function UpdateMemberRole({
   value,
@@ -28,6 +30,12 @@ export default function UpdateMemberRole({
       role: value as Role,
     })
     queryClient.invalidateQueries({ queryKey: ['members', org] })
+    toast.custom((t) => (
+      <Toast
+        message="Cargo do membro atualizado com sucesso"
+        onClick={() => toast.dismiss(t)}
+      />
+    ))
   }
   return (
     <div className="*:not-first:mt-2">

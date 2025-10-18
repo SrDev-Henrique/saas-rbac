@@ -19,8 +19,11 @@ export function AcceptInviteButton({ className }: { className?: string }) {
       type="submit"
       disabled={pending}
     >
-      {pending && <Loader2 className="size-4 animate-spin" />}
-      {pending ? 'Aceitando...' : 'Aceitar convite'}
+      {pending ? (
+        <Loader2 className="size-4 animate-spin" />
+      ) : (
+        'Aceitar convite'
+      )}
     </Button>
   )
 }

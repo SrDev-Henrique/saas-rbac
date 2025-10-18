@@ -23,6 +23,8 @@ import { queryClient } from '@/lib/react-query'
 import { createProjectAction } from './actions'
 import { Textarea } from '@/components/ui/textarea'
 import { useAbility } from '@/hooks/use-ability'
+import { toast } from 'sonner'
+import Toast from '@/components/toast'
 
 export default function CreateProjectForm() {
   const formSchema = createProjectSchema
@@ -96,12 +98,23 @@ export default function CreateProjectForm() {
         if (state.success) {
           form.reset()
           queryClient.invalidateQueries({ queryKey: ['projects', slug] })
+          toast.custom((t) => (
+            <Toast message={state.message!} onClick={() => toast.dismiss(t)} />
+          ))
         }
       } catch (err: any) {
         setFormState({
           success: false,
           message: err?.message ?? 'Erro desconhecido',
         })
+        toast.custom((t) => (
+          <Toast
+            error={true}
+            message="Erro ao criar projeto"
+            errorMessage={(err as Error).message}
+            onClick={() => toast.dismiss(t)}
+          />
+        ))
       }
     })
   }

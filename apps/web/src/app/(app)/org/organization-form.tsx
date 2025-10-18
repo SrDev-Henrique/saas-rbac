@@ -26,6 +26,8 @@ import EmeraldAlert from '@/components/origin-ui/alert-emerald'
 import { queryClient } from '@/lib/react-query'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
+import Toast from '@/components/toast'
 
 export default function OrganizationForm({
   isEditing = false,
@@ -52,8 +54,6 @@ export default function OrganizationForm({
     },
   })
 
-  console.log(initialData?.avatarUrl)
-
   const [{ success, message }, setFormState] = useState<{
     success: boolean
     message: string | null
@@ -63,8 +63,6 @@ export default function OrganizationForm({
   })
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
-
-  console.log(avatarFile)
 
   const [removeAvatarFile, setRemoveAvatarFile] = useState(false)
 
@@ -139,27 +137,42 @@ export default function OrganizationForm({
           }
         }
 
+        if (state.success && isEditing) {
+          const nextSlug = state.slug ?? org
+
+          queryClient.invalidateQueries({
+            queryKey: ['organization', nextSlug],
+          })
+          if (nextSlug && nextSlug !== org) {
+            queryClient.removeQueries({ queryKey: ['organization', org] })
+          }
+          router.push(`/org/${nextSlug}/settings`)
+          router.refresh()
+        }
+
         if (state.success) {
           form.reset()
           setAvatarFile(null)
           setRemoveAvatarFile(true)
           setTimeout(() => setRemoveAvatarFile(false), 50)
-          const nextSlug = state.slug ?? org
           queryClient.invalidateQueries({ queryKey: ['organizations'] })
-          queryClient.invalidateQueries({
-            queryKey: ['organization', nextSlug],
-          })
-          if (nextSlug !== org) {
-            queryClient.removeQueries({ queryKey: ['organization', org] })
-          }
-          router.push(`/org/${nextSlug}/settings`)
-          router.refresh()
+          toast.custom((t) => (
+            <Toast message={state.message!} onClick={() => toast.dismiss(t)} />
+          ))
         }
       } catch (err: any) {
         setFormState({
           success: false,
           message: err?.message ?? 'Erro desconhecido',
         })
+        toast.custom((t) => (
+          <Toast
+            error={true}
+            message="Erro ao criar organização"
+            errorMessage={(err as Error).message}
+            onClick={() => toast.dismiss(t)}
+          />
+        ))
       }
     })
   }

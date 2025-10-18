@@ -11,6 +11,8 @@ import DeleteConfirmation from './origin-ui/delete-confirmation'
 import { shutdownOrganization } from '@/http/shutdown-organization'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
+import Toast from './toast'
 
 export default function Info({
   avatarUrl,
@@ -52,11 +54,24 @@ export default function Info({
       setIsDeleting(true)
       await shutdownOrganization({ slug })
       setIsDeleting(false)
+      toast.custom((t) => (
+        <Toast
+          message="Organização deletada com sucesso"
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
       router.push('/')
       router.refresh()
     } catch (_error) {
       // Non-intrusive fallback; optionally replace with a toast system
-      alert('Falha ao deletar a organização. Tente novamente.')
+      toast.custom((t) => (
+        <Toast
+          error={true}
+          message="Falha ao deletar a organização. Tente novamente."
+          errorMessage={(_error as Error).message}
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
       setIsDeleting(false)
     }
   }
@@ -200,7 +215,6 @@ export default function Info({
             name={name}
             onDelete={handleShutdown}
             isDeleting={isDeleting}
-            setIsDeleting={setIsDeleting}
           />
         </div>
       </CardContent>

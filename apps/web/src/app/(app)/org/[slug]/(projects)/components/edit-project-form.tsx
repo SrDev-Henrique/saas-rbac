@@ -21,6 +21,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 import { initialValues } from './edit-project-dialog'
+import { toast } from 'sonner'
+import Toast from '@/components/toast'
 
 export default function EditProjectForm({
   orgSlug,
@@ -100,12 +102,23 @@ export default function EditProjectForm({
         if (state.success) {
           form.reset()
           queryClient.invalidateQueries({ queryKey: ['projects', orgSlug] })
+          toast.custom((t) => (
+            <Toast message={state.message!} onClick={() => toast.dismiss(t)} />
+          ))
         }
       } catch (err: any) {
         setFormState({
           success: false,
           message: err?.message ?? 'Erro desconhecido',
         })
+        toast.custom((t) => (
+          <Toast
+            error={true}
+            message="Erro ao editar projeto"
+            errorMessage={(err as Error).message}
+            onClick={() => toast.dismiss(t)}
+          />
+        ))
       }
     })
   }

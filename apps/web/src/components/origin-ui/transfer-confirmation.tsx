@@ -82,10 +82,7 @@ export default function TransferConfirmation({
               onClick={() => onTransfer()}
             >
               {isTransferring ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="size-4 animate-spin" />
-                  Transferindo...
-                </div>
+                <Loader2 className="size-4 animate-spin" />
               ) : (
                 'Transferir'
               )}

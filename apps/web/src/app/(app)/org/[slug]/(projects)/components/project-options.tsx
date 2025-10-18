@@ -13,6 +13,8 @@ import { deleteProject } from '@/http/delete-project'
 import DeleteProjectConfirmation from './delete-project-confirmation'
 import { queryClient } from '@/lib/react-query'
 import EditProjectDialog, { initialValues } from './edit-project-dialog'
+import { toast } from 'sonner'
+import Toast from '@/components/toast'
 
 export default function ProjectCardOptions({
   orgSlug,
@@ -40,9 +42,22 @@ export default function ProjectCardOptions({
       setIsDeleting(false)
       setDialogOpen(false)
       setMenuOpen(false)
+      toast.custom((t) => (
+        <Toast
+          message="Projeto deletado com sucesso"
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
     } catch (error) {
-      console.error(error)
       setIsDeleting(false)
+      toast.custom((t) => (
+        <Toast
+          error={true}
+          message="Erro ao deletar projeto"
+          errorMessage={(error as Error).message}
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
     }
   }
 

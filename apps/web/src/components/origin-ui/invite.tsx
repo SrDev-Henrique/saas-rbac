@@ -19,6 +19,8 @@ import {
   DialogTrigger,
 } from '../ui/dialog'
 import { Skeleton } from '../ui/skeleton'
+import { toast } from 'sonner'
+import Toast from '../toast'
 
 setDefaultOptions({ locale: ptBR })
 
@@ -49,9 +51,22 @@ export default function Invite({
   async function handleRevokeInvite(inviteId: string) {
     try {
       await revokeInvite({ slug: orgSlug, inviteId })
+      toast.custom((t) => (
+        <Toast
+          message="Convite revogado com sucesso"
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
       queryClient.invalidateQueries({ queryKey: ['invites', orgSlug] })
     } catch (error) {
-      alert(error)
+      toast.custom((t) => (
+        <Toast
+          error={true}
+          message="Erro ao revogar convite"
+          errorMessage={(error as Error).message}
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
     }
   }
   return (

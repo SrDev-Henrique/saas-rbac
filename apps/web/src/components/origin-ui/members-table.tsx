@@ -24,6 +24,8 @@ import { useGetMembership } from '@/hooks/use-get-membership'
 import { queryClient } from '@/lib/react-query'
 import UpdateMemberRole from './update-member-role'
 import { transferOrganization } from '@/http/transfer-organization'
+import { toast } from 'sonner'
+import Toast from '../toast'
 
 export default function MembersTable({
   members,
@@ -64,8 +66,21 @@ export default function MembersTable({
       queryClient.invalidateQueries({ queryKey: ['membership', org] })
       queryClient.invalidateQueries({ queryKey: ['members', org] })
       queryClient.invalidateQueries({ queryKey: ['ability', org] })
+      toast.custom((t) => (
+        <Toast
+          message="Transferência de organização realizada com sucesso"
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
     } catch (error) {
-      alert(error)
+      toast.custom((t) => (
+        <Toast
+          error={true}
+          message="Erro ao transferir organização"
+          errorMessage={(error as Error).message}
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
       setIsTransferring(false)
     }
   }
@@ -76,8 +91,21 @@ export default function MembersTable({
       await removeMember({ slug: orgSlug, memberId })
       setIsDeleting(false)
       queryClient.invalidateQueries({ queryKey: ['members', org] })
+      toast.custom((t) => (
+        <Toast
+          message="Membro removido com sucesso"
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
     } catch (error) {
-      alert(error)
+      toast.custom((t) => (
+        <Toast
+          error={true}
+          message="Erro ao remover membro"
+          errorMessage={(error as Error).message}
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
       setIsDeleting(false)
     }
   }
@@ -217,7 +245,6 @@ export default function MembersTable({
                         name={item.name}
                         onDelete={() => handleRemoveMember(org, item.id)}
                         isDeleting={isDeleting}
-                        setIsDeleting={setIsDeleting}
                         disabled={isDeleting}
                       />
                     </TableCell>

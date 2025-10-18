@@ -53,6 +53,8 @@ import { createInviteAction } from '@/app/(app)/org/[slug]/members/actions'
 import { queryClient } from '@/lib/react-query'
 import RedAlert from './origin-ui/alert-red'
 import EmeraldAlert from './origin-ui/alert-emerald'
+import { toast } from 'sonner'
+import Toast from './toast'
 
 export default function InviteMembersDialog({ org }: { org: string }) {
   const id = useId()
@@ -147,6 +149,9 @@ export default function InviteMembersDialog({ org }: { org: string }) {
 
         if (state.success) {
           queryClient.invalidateQueries({ queryKey: ['invites', org] })
+          toast.custom((t) => (
+            <Toast message={state.message!} onClick={() => toast.dismiss(t)} />
+          ))
         }
 
         if (state.success && !hasFieldErrors) {
@@ -157,6 +162,14 @@ export default function InviteMembersDialog({ org }: { org: string }) {
           success: false,
           message: err?.message ?? 'Erro desconhecido',
         })
+        toast.custom((t) => (
+          <Toast
+            error={true}
+            message="Erro ao enviar convite"
+            errorMessage={err?.message ?? 'Erro desconhecido'}
+            onClick={() => toast.dismiss(t)}
+          />
+        ))
       }
     })
   }
@@ -334,10 +347,7 @@ export default function InviteMembersDialog({ org }: { org: string }) {
               disabled={!form.formState.isValid || isLoading}
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                  <p>Enviando convite{fields.length > 1 && 's'}</p>
-                </>
+                <Loader2 className="mr-2 size-4 animate-spin" />
               ) : (
                 <p>Enviar convite{fields.length > 1 && 's'}</p>
               )}

@@ -23,7 +23,6 @@ export default function DeleteConfirmation({
   name,
   onDelete,
   isDeleting,
-  setIsDeleting,
   disabled,
   size,
   Icon,
@@ -33,7 +32,6 @@ export default function DeleteConfirmation({
   name: string
   onDelete: () => void
   isDeleting: boolean
-  setIsDeleting: (isDeleting: boolean) => void
   disabled: boolean | undefined
   size?: 'sm' | 'lg' | 'default' | 'icon' | null | undefined
   Icon?: React.ReactNode
@@ -103,10 +101,7 @@ export default function DeleteConfirmation({
               variant="destructive"
             >
               {isDeleting ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="size-4 animate-spin" />
-                  {isMember ? 'Removendo...' : 'Deletando...'}
-                </div>
+                <Loader2 className="size-4 animate-spin" />
               ) : isMember ? (
                 'Remover'
               ) : (

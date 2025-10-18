@@ -3,6 +3,9 @@
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
 import { useState } from 'react'
+import { toast } from 'sonner'
+import Toast from './toast'
+import { Loader2 } from 'lucide-react'
 
 export default function DeleteUserButton({ id }: { id: string }) {
   const router = useRouter()
@@ -25,14 +28,28 @@ export default function DeleteUserButton({ id }: { id: string }) {
 
       if (!res.ok) {
         const err = await res.text()
-        alert('Erro ao deletar: ' + err)
+        toast.custom((t) => (
+          <Toast
+            error={true}
+            message="Erro ao deletar"
+            errorMessage={err}
+            onClick={() => toast.dismiss(t)}
+          />
+        ))
         return
       }
 
       router.push('/sign-in')
     } catch (err) {
       console.error(err)
-      alert('Erro inesperado ao deletar usuário')
+      toast.custom((t) => (
+        <Toast
+          error={true}
+          message="Erro inesperado ao deletar usuário"
+          errorMessage={(err as Error).message}
+          onClick={() => toast.dismiss(t)}
+        />
+      ))
     } finally {
       setLoading(false)
     }
@@ -45,7 +62,13 @@ export default function DeleteUserButton({ id }: { id: string }) {
       className="cursor-pointer"
       disabled={loading}
     >
-      {loading ? 'Deletando...' : 'Deletar conta'}
+      {loading ? (
+        <div className="flex items-center gap-2">
+          <Loader2 className="size-4 animate-spin" />
+        </div>
+      ) : (
+        'Deletar conta'
+      )}
     </Button>
   )
 }
