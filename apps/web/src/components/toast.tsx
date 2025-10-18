@@ -1,16 +1,23 @@
 import { CheckCircle2, TriangleAlertIcon, X } from 'lucide-react'
 import { Button } from './ui/button'
+import Link from 'next/link'
 
 export default function Toast({
   error = false,
   message,
   errorMessage,
   onClick,
+  action,
+  href,
+  actionLabel,
 }: {
   error?: boolean
   message: string
   errorMessage?: string
   onClick: () => void
+  action?: boolean
+  href?: string
+  actionLabel?: string
 }) {
   return (
     <div className="bg-background text-foreground w-full rounded-md border px-4 py-3 shadow-lg sm:w-[var(--width)]">
@@ -58,14 +65,35 @@ export default function Toast({
             />
             <div className="flex grow flex-col justify-between gap-2">
               <p className="text-sm">{message}</p>
-              <Button
-                variant="outline"
-                className="text-sm font-medium hover:underline"
-                size="sm"
-                onClick={onClick}
-              >
-                Fechar
-              </Button>
+              {action ? (
+                <div className="flex gap-2 text-sm">
+                  <Button
+                    variant="outline"
+                    className="text-sm font-medium hover:underline"
+                    size="sm"
+                    asChild
+                  >
+                    <Link href={href!}>{actionLabel}</Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="text-sm font-medium hover:underline"
+                    size="sm"
+                    onClick={onClick}
+                  >
+                    Fechar
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="outline"
+                  className="text-sm font-medium hover:underline"
+                  size="sm"
+                  onClick={onClick}
+                >
+                  Fechar
+                </Button>
+              )}
             </div>
           </div>
           <Button

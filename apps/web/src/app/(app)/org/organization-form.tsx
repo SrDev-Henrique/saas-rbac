@@ -157,7 +157,13 @@ export default function OrganizationForm({
           setTimeout(() => setRemoveAvatarFile(false), 50)
           queryClient.invalidateQueries({ queryKey: ['organizations'] })
           toast.custom((t) => (
-            <Toast message={state.message!} onClick={() => toast.dismiss(t)} />
+            <Toast
+              message={state.message!}
+              onClick={() => toast.dismiss(t)}
+              action={true}
+              href={`/org/${org}`}
+              actionLabel="Ver organização"
+            />
           ))
         }
       } catch (err: any) {
