@@ -6,7 +6,7 @@ interface GetPendingInvitesResponse {
     id: string
     email: string
     role: Role
-    createdAt: Date
+    createdAt: string
     invitedName: string
     organization: {
       name: string

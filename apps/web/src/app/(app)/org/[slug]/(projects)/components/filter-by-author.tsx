@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -42,13 +43,15 @@ export default function FilterByAuthor({
             <SelectItem value="all">Todos</SelectItem>
             {authors.map((author) => (
               <SelectItem key={author.id} value={author.id}>
-                <img
-                  className="size-5 rounded"
-                  src={author.avatarUrl ?? ''}
-                  alt={author.name ?? ''}
-                  width={20}
-                  height={20}
-                />
+                <Avatar>
+                  <AvatarImage src={author.avatarUrl ?? ''} />
+                  <AvatarFallback>
+                    {author.name
+                      ?.split(' ')
+                      .map((name) => name.charAt(0).toUpperCase())
+                      .join('') ?? '??'}
+                  </AvatarFallback>
+                </Avatar>
                 <span className="truncate">{author.name ?? ''}</span>
               </SelectItem>
             ))}
