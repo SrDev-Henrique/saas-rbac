@@ -9,8 +9,8 @@ export async function rejectInvite(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
-    .post(
-      '/invites/:invieId/reject',
+    .delete(
+      '/invites/:inviteId/reject',
       {
         schema: {
           tags: ['Invites'],
