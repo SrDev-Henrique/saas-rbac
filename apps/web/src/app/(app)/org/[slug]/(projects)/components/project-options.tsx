@@ -132,7 +132,7 @@ export default function ProjectCardOptions({
         dialogOpen={isEditing}
         setDialogOpen={setIsEditing}
         initialValues={initialValues}
-      />
+        />
     </div>
   )
 }

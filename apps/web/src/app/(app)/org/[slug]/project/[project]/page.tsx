@@ -1,4 +1,5 @@
 import Header from '@/components/header'
+import ProjectClientPage from "./project-client-page"
 
 export default async function ProjectPage({
   params,
@@ -10,7 +11,7 @@ export default async function ProjectPage({
   return (
     <div className="relative space-y-4 p-4 xl:px-0">
       <Header slug={awaitedParams.slug} />
-      <h1>Projeto</h1>
+      <ProjectClientPage slug={awaitedParams.slug} />
     </div>
   )
 }

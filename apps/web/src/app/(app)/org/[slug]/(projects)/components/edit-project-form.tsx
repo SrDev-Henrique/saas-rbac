@@ -3,7 +3,7 @@ import { editProjectSchema } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
 import { useEffect, useState, useTransition } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { queryClient } from '@/lib/react-query'
 import { editProjectAction } from './actions'
 import {
@@ -28,12 +28,16 @@ export default function EditProjectForm({
   orgSlug,
   projectId,
   initialValues,
+  projectSlug,
 }: {
   orgSlug: string
   projectId: string
   initialValues: initialValues
+  projectSlug?: string
 }) {
   const formSchema = editProjectSchema
+
+  const router = useRouter()
 
   const form = useForm<z.input<typeof editProjectSchema>>({
     resolver: zodResolver(editProjectSchema),
@@ -97,6 +101,15 @@ export default function EditProjectForm({
             // @ts-expect-error dynamic field mapping from server
             form.setError(field, { type: 'server', message: messageText })
           }
+        }
+
+        if (projectSlug) {
+          queryClient.invalidateQueries({ queryKey: ['project', projectSlug] })
+          toast.custom((t) => (
+            <Toast message={state.message!} onClick={() => toast.dismiss(t)} />
+          ))
+          router.refresh()
+          return
         }
 
         if (state.success) {

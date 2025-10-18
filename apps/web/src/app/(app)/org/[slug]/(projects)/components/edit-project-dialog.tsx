@@ -20,12 +20,14 @@ export default function EditProjectDialog({
   dialogOpen,
   setDialogOpen,
   initialValues,
+  projectSlug,
 }: {
   orgSlug: string
   projectId: string
   dialogOpen: boolean
   setDialogOpen: (open: boolean) => void
   initialValues: initialValues
+  projectSlug?: string
 }) {
   return (
     <Dialog
@@ -57,6 +59,7 @@ export default function EditProjectDialog({
           orgSlug={orgSlug}
           projectId={projectId}
           initialValues={initialValues}
+          projectSlug={projectSlug}
         />
       </DialogContent>
     </Dialog>

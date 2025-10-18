@@ -68,7 +68,7 @@ export default function Toast({
               {action ? (
                 <div className="flex gap-2 text-sm">
                   <Button
-                    variant="outline"
+                    variant="default"
                     className="text-sm font-medium hover:underline"
                     size="sm"
                     asChild

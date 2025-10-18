@@ -25,6 +25,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useAbility } from '@/hooks/use-ability'
 import { toast } from 'sonner'
 import Toast from '@/components/toast'
+import { createSlug } from '@/utils/create-slug'
 
 export default function CreateProjectForm() {
   const formSchema = createProjectSchema
@@ -99,7 +100,13 @@ export default function CreateProjectForm() {
           form.reset()
           queryClient.invalidateQueries({ queryKey: ['projects', slug] })
           toast.custom((t) => (
-            <Toast message={state.message!} onClick={() => toast.dismiss(t)} />
+            <Toast
+              message={state.message!}
+              action={true}
+              actionLabel="Ir para o projeto"
+              href={`/org/${slug}/project/${createSlug(data.name)}`}
+              onClick={() => toast.dismiss(t)}
+            />
           ))
         }
       } catch (err: any) {

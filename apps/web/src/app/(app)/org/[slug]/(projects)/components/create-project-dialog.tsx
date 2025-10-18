@@ -20,7 +20,7 @@ export default function CreateProjectDialog() {
       </DialogTrigger>
       <DialogContent>
         <DialogTitle className="text-center">Criar novo projeto</DialogTitle>
-        <CreateProjectForm />
+        <CreateProjectForm/>
       </DialogContent>
     </Dialog>
   )

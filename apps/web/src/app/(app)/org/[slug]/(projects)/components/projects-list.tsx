@@ -19,6 +19,7 @@ import ProjectCardOptions from './project-options'
 import { ptBR } from 'date-fns/locale'
 import { useAbility } from '@/hooks/use-ability'
 import { projectSchema } from '@saas/auth/src/models/project'
+import Link from 'next/link'
 
 setDefaultOptions({ locale: ptBR })
 
@@ -131,8 +132,10 @@ export default function ProjectsList({
                       </div>
                     </div>
                     <div className="flex w-full">
-                      <Button className="w-full" variant="outline">
-                        <EyeIcon className="size-4" /> Visualizar
+                      <Button className="w-full" variant="outline" asChild>
+                        <Link href={`/org/${slug}/project/${project.slug}`}>
+                          <EyeIcon className="size-4" /> Visualizar
+                        </Link>
                       </Button>
                     </div>
                   </div>
