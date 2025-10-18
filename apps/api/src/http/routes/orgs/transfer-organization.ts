@@ -73,6 +73,18 @@ export async function transferOrganization(app: FastifyInstance) {
             },
           }),
 
+          prisma.member.update({
+            where: {
+              organizationId_userId: {
+                organizationId: organization.id,
+                userId: userId,
+              },
+            },
+            data: {
+              role: 'MEMBER',
+            },
+          }),
+
           prisma.organization.update({
             where: { id: organization.id },
             data: { ownerId: newOwnerId },

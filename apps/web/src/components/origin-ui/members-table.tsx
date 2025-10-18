@@ -56,15 +56,14 @@ export default function MembersTable({
   const canRemoveMember = permissions.data?.can('delete', 'User')
   const canUpdateMember = permissions.data?.can('update', 'User')
 
-  console.log(canTransferOwnership)
-
   async function handleTransferOrganization(newOwnerId: string) {
     try {
       setIsTransferring(true)
-      await transferOrganization({ newOwnerId })
+      await transferOrganization({ orgSlug: org, newOwnerId })
       setIsTransferring(false)
       queryClient.invalidateQueries({ queryKey: ['membership', org] })
       queryClient.invalidateQueries({ queryKey: ['members', org] })
+      queryClient.invalidateQueries({ queryKey: ['ability', org] })
     } catch (error) {
       alert(error)
       setIsTransferring(false)

@@ -28,6 +28,7 @@ import Link from 'next/link'
 import { useTransition } from 'react'
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar'
 import { rejectInvite } from '@/http/reject-invite'
+import Toast from './toast'
 
 setDefaultOptions({ locale: ptBR })
 
@@ -149,79 +150,20 @@ export default function PendingInvites({ userId }: { userId: string }) {
         await rejectInvite({ inviteId })
         queryClient.invalidateQueries({ queryKey: ['pending-invites', userId] })
         toast.custom((t) => (
-          <div className="bg-background text-foreground w-full rounded-md border px-4 py-3 shadow-lg sm:w-[var(--width)]">
-            <div className="flex gap-2">
-              <div className="flex grow gap-3">
-                <CheckCircle2
-                  className="mt-0.5 shrink-0 text-emerald-500"
-                  size={16}
-                  aria-hidden="true"
-                />
-                <div className="flex grow flex-col justify-between gap-2">
-                  <p className="text-sm">Convite recusado com sucesso</p>
-                  <Button
-                    variant="outline"
-                    className="text-sm font-medium hover:underline"
-                    size="sm"
-                    onClick={() => toast.dismiss(t)}
-                  >
-                    Fechar
-                  </Button>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                className="group -my-1.5 -me-2 size-8 shrink-0 p-0 hover:bg-transparent"
-                onClick={() => toast.dismiss(t)}
-                aria-label="Fechar banner"
-              >
-                <X
-                  size={16}
-                  className="opacity-60 transition-opacity group-hover:opacity-100"
-                  aria-hidden="true"
-                />
-              </Button>
-            </div>
-          </div>
+          <Toast
+            message="Convite recusado com sucesso"
+            onClick={() => toast.dismiss(t)}
+          />
         ))
       } catch (error) {
         console.error(error)
         toast.custom((t) => (
-          <div className="bg-background text-foreground w-full rounded-md border px-4 py-3 shadow-lg sm:w-[var(--width)]">
-            <div className="flex gap-2">
-              <div className="flex grow gap-3">
-                <TriangleAlertIcon
-                  className="text-destructive mt-0.5 shrink-0"
-                  size={16}
-                  aria-hidden="true"
-                />
-                <div className="flex grow justify-between gap-12">
-                  <p className="text-sm">
-                    Erro ao recusar convite: {(error as Error).message}
-                  </p>
-                  <Button
-                    variant="outline"
-                    className="text-sm font-medium hover:underline"
-                    onClick={() => toast.dismiss(t)}
-                  >
-                    Fechar
-                  </Button>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                className="group -my-1.5 -me-2 size-8 shrink-0 p-0 hover:bg-transparent"
-                onClick={() => toast.dismiss(t)}
-                aria-label="Fechar banner"
-              >
-                <X
-                  size={16}
-                  className="opacity-60 transition-opacity group-hover:opacity-100"
-                  aria-hidden="true"
-                />
-              </Button>
-            </div>
-          </div>
+          <Toast
+            error={true}
+            message="Erro ao recusar convite"
+            errorMessage={(error as Error).message}
+            onClick={() => toast.dismiss(t)}
+          />
         ))
       }
     })
