@@ -1,9 +1,7 @@
 import ky from 'ky'
 
 function resolveBaseUrl(): string {
-  const base = process.env.NEXT_PUBLIC_API_URL
-  if (!base) throw new Error('NEXT_PUBLIC_API_URL is not set')
-
+  const base = 'https://saas-rbac-em1b.onrender.com'
   return base.replace(/\/$/, '')
 }
 
@@ -16,7 +14,7 @@ function getCookie(name: string): string | null {
 }
 
 export const api = ky.create({
-  prefixUrl: `${resolveBaseUrl()}/api`,
+  prefixUrl: resolveBaseUrl(),
   hooks: {
     beforeRequest: [
       async (request) => {
