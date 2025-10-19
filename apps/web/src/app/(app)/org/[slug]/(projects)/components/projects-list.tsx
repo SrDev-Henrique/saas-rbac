@@ -83,7 +83,7 @@ export default function ProjectsList({
         <div
           className={cn(
             'grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4',
-            length <= 2 && 'grid-cols-[repeat(auto-fit,minmax(360px,350px))]',
+            length <= 2 && 'grid-cols-[repeat(auto-fit,minmax(350px,360px))]',
           )}
         >
           {projectsList.map((project) => {
@@ -123,13 +123,13 @@ export default function ProjectsList({
                                 '??'}
                             </AvatarFallback>
                           </Avatar>
-                          <p className="text-foreground text-sm font-medium hover:underline">
+                          <p className="text-foreground text-xs font-medium hover:underline">
                             {project.owner.name ?? 'Nome não informado'}
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-1.5 pb-2">
-                        <CalendarDays className="text-muted-foreground size-4" />
+                        <CalendarDays className="text-muted-foreground size-3" />
                         <p className="text-muted-foreground text-xs">
                           {formatDistanceToNow(project.createdAt, {
                             addSuffix: true,
