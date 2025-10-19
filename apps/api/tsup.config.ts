@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup'
+import path from 'path'
 
 export default defineConfig({
   entry: ['src/http/server.ts'],
@@ -25,6 +26,13 @@ export default defineConfig({
       '.prisma': 'file',
       '.wasm': 'file',
       '.node': 'file',
+    }
+    // Alias workspace packages to their source during build, ensuring bundling.
+    // This helps in CI environments where workspace linking may differ.
+    ;(options as any).alias = {
+      ...(options as any).alias,
+      '@saas/auth': path.resolve(__dirname, '../../packages/auth/src/index.ts'),
+      '@saas/env': path.resolve(__dirname, '../../packages/_env/index.ts'),
     }
   },
 })
