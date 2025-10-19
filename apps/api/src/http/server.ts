@@ -60,7 +60,11 @@ app.register(fastifySwagger, {
         'fullstack SaaS multi-tenant & RBAC with Next.js, Prisma, Fastify, Zod and TypeScript',
       version: '1.0.0',
     },
-    servers: [{ url: `http://localhost:${env.PORT}` }],
+    servers: [
+      {
+        url: process.env.NEXT_PUBLIC_API_URL ?? `http://localhost:${env.PORT}`,
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -133,6 +137,6 @@ app.register(getOrganizationBilling)
 
 app.register(uploadAvatar)
 
-app.listen({ port: env.PORT }).then(() => {
+app.listen({ port: env.PORT, host: '0.0.0.0' }).then(() => {
   console.log(`HTTP server running on port ${env.PORT}`)
 })
