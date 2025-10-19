@@ -54,7 +54,9 @@ export async function rejectInvite(app: FastifyInstance) {
         }
 
         if (invite.email !== user.email) {
-          throw new BadRequestError('O email do convite não corresponde ao email do usuário.')
+          throw new BadRequestError(
+            'O email do convite não corresponde ao email do usuário.',
+          )
         }
 
         await prisma.invite.delete({

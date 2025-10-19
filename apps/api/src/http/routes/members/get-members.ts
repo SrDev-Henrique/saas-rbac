@@ -5,7 +5,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { UnauthorizedError } from '../_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
-import { roleSchema } from "@saas/auth"
+import { roleSchema } from '@saas/auth'
 
 export async function getMembers(app: FastifyInstance) {
   app

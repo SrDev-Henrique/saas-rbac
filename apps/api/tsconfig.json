@@ -4,7 +4,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@saas/auth": ["../../packages/auth/src/index.ts"],
+      "@saas/auth/*": ["../../packages/auth/src/*"]
     }
   }
 }
