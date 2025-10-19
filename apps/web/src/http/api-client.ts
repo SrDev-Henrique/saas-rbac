@@ -1,5 +1,12 @@
-import { env } from '@saas/env'
 import ky from 'ky'
+
+function resolveBaseUrl(): string {
+  const base = process.env.NEXT_PUBLIC_API_URL
+  if (!base) {
+    throw new Error('NEXT_PUBLIC_API_URL is not set')
+  }
+  return base
+}
 
 function getCookie(name: string): string | null {
   if (typeof document === 'undefined') return null
@@ -10,7 +17,7 @@ function getCookie(name: string): string | null {
 }
 
 export const api = ky.create({
-  prefixUrl: env.NEXT_PUBLIC_API_URL,
+  prefixUrl: resolveBaseUrl(),
   hooks: {
     beforeRequest: [
       async (request) => {
