@@ -2,10 +2,9 @@ import ky from 'ky'
 
 function resolveBaseUrl(): string {
   const base = process.env.NEXT_PUBLIC_API_URL
-  if (!base) {
-    throw new Error('NEXT_PUBLIC_API_URL is not set')
-  }
-  return base
+  if (!base) throw new Error('NEXT_PUBLIC_API_URL is not set')
+
+  return base.replace(/\/$/, '')
 }
 
 function getCookie(name: string): string | null {
@@ -17,7 +16,7 @@ function getCookie(name: string): string | null {
 }
 
 export const api = ky.create({
-  prefixUrl: resolveBaseUrl(),
+  prefixUrl: `${resolveBaseUrl()}/api`,
   hooks: {
     beforeRequest: [
       async (request) => {

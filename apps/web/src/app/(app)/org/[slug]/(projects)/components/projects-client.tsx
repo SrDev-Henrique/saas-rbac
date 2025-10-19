@@ -1,17 +1,13 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { getProjects, type GetProjectsResponse } from '@/http/get-projects'
+import { type GetProjectsResponse } from '@/http/get-projects'
 import ProjectsFilter from './projects-filter'
 import ProjectsList from './projects-list'
+import { useGetProjects } from '@/hooks/use-get-projects'
 
 export default function ProjectsClient({ orgSlug }: { orgSlug: string }) {
-  const { data: projects, isLoading } = useQuery({
-    queryKey: ['projects', orgSlug],
-    queryFn: () => getProjects(orgSlug),
-    enabled: !!orgSlug,
-  })
+  const { data: projects, isLoading } = useGetProjects(orgSlug)
 
   const [search, setSearch] = useState('')
   const [author, setAuthor] = useState('all')

@@ -1,3 +1,5 @@
+import { api } from './api-client'
+
 export interface GetProjectsResponse {
   projects: {
     id: string
@@ -17,18 +19,8 @@ export interface GetProjectsResponse {
 }
 
 export async function getProjects(slug: string) {
-  const res = await fetch(`/api/organizations/${slug}/projects`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch projects')
-  }
-
-  const data = (await res.json()) as GetProjectsResponse
-  return data
+  const result = await api
+    .get(`organizations/${slug}/projects`)
+    .json<GetProjectsResponse>()
+  return result
 }

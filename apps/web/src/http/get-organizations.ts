@@ -1,29 +1,20 @@
 import { Role } from '@saas/auth'
+import { api } from './api-client'
 
-interface GetOrganizationsResponse {
+interface GetOrganizationResponse {
   organizations: {
-    role: Role
     id: string
     name: string
     slug: string
     avatarUrl: string | null
+    role: Role
   }[]
 }
 
 export async function getOrganizations() {
-  const res = await fetch('/api/organizations', {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
+  const response = await api
+    .get(`organizations`)
+    .json<GetOrganizationResponse>()
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch organizations')
-  }
-
-  const data = (await res.json()) as GetOrganizationsResponse
-
-  return data
+  return response
 }

@@ -13,11 +13,10 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Link from 'next/link'
 import { useParams, usePathname } from 'next/navigation'
-import { getProjects } from '@/http/get-projects'
-import { useQuery } from '@tanstack/react-query'
 import { useAbility } from '@/hooks/use-ability'
 import { queryClient } from '@/lib/react-query'
 import { useEffect } from 'react'
+import { useGetProjects } from '@/hooks/use-get-projects'
 
 export default function NavigationTabs() {
   const { slug: org } = useParams<{ slug: string }>()
@@ -29,11 +28,7 @@ export default function NavigationTabs() {
 
   const defaultValue = tab ? tab : 'projects'
 
-  const { data: projects, isLoading } = useQuery({
-    queryKey: ['projects', org],
-    queryFn: () => getProjects(org!),
-    enabled: !!org,
-  })
+  const { data: projects, isLoading } = useGetProjects(org)
 
   const projectsCount = Array.isArray(projects)
     ? projects.length

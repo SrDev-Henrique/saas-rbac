@@ -13,9 +13,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { PlusIcon } from 'lucide-react'
 import { useParams, usePathname, useRouter } from 'next/navigation'
-import { useQuery } from '@tanstack/react-query'
-import { getProjects } from '@/http/get-projects'
 import { Skeleton } from './ui/skeleton'
+import { useGetProjects } from '@/hooks/use-get-projects'
 
 type Projects = {
   projects: {
@@ -47,11 +46,7 @@ export default function ProjectsSwitcher() {
 
   const { slug: orgSlug } = useParams<{ slug: string }>()
 
-  const { data, isLoading } = useQuery<Projects>({
-    queryKey: ['projects', orgSlug],
-    queryFn: () => getProjects(orgSlug),
-    enabled: !!orgSlug,
-  })
+  const { data, isLoading } = useGetProjects(orgSlug)
   const projects = data?.projects ?? []
 
   return (

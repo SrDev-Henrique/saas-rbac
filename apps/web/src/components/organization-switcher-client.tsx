@@ -13,9 +13,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { PlusIcon } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
-import { useQuery } from '@tanstack/react-query'
-import { getOrganizations } from '@/http/get-organizations'
 import { Skeleton } from './ui/skeleton'
+import { useGetOrganizations } from '@/hooks/use-get-organizations'
 
 type OrganizationsResponse = {
   organizations: {
@@ -38,10 +37,7 @@ export default function OrganizationSwitcherClient() {
 
   const isRoot = pathname === '/' || pathname === ''
 
-  const { data, isLoading } = useQuery<OrganizationsResponse>({
-    queryKey: ['organizations'],
-    queryFn: () => getOrganizations(),
-  })
+  const { data, isLoading } = useGetOrganizations()
 
   const organizations = data?.organizations ?? []
 
