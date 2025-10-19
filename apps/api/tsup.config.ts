@@ -11,6 +11,7 @@ export default defineConfig({
   splitting: false,
   clean: true,
   skipNodeModulesBundle: true,
+  noExternal: ['@saas/auth', '@saas/env'],
   external: [
     '@prisma/client',
     'prisma',
