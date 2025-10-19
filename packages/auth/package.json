@@ -2,12 +2,16 @@
   "name": "@saas/auth",
   "version": "0.0.0",
   "private": true,
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup"
+  },
   "devDependencies": {
     "@saas/eslint-config": "workspace:*",
     "@saas/prettier": "workspace:*",
-    "@saas/tsconfig": "workspace:*"
+    "@saas/tsconfig": "workspace:*",
+    "tsup": "^8.5.0"
   },
   "eslintConfig": {
     "extends": [
