@@ -18,10 +18,16 @@ import { useEffect } from 'react'
 import ProjectCardOptions from './project-options'
 import { ptBR } from 'date-fns/locale'
 import { useAbility } from '@/hooks/use-ability'
-import { projectSchema } from '@saas/auth/src/models/project'
 import Link from 'next/link'
+import { z } from 'zod'
 
 setDefaultOptions({ locale: ptBR })
+
+const projectSchema = z.object({
+  __typename: z.literal('Project').default('Project'),
+  id: z.string(),
+  ownerId: z.string(),
+})
 
 export default function ProjectsList({
   projects,

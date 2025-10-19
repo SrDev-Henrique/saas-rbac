@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm env:load next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "pnpm env:load next build --turbopack",
     "start": "next start",
     "env:load": "dotenv -e ../../.env --"
   },
@@ -52,7 +52,7 @@
   "prettier": "@saas/prettier",
   "eslintConfig": {
     "extends": [
-      "@saas/eslint-config/next"
+      "@saas/eslint-config/next-js"
     ]
   }
 }

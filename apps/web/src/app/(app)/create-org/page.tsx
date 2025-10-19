@@ -1,5 +1,7 @@
 import Header from '@/components/header'
 import OrganizationForm from '../org/organization-form'
+import { Suspense } from 'react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function CreateOrganizationPage() {
   return (
@@ -9,7 +11,9 @@ export default function CreateOrganizationPage() {
         <h1>Criar Organização</h1>
       </div>
 
-      <OrganizationForm isEditing={false} org="" />
+      <Suspense fallback={<Skeleton className="h-10 w-full" />}>
+        <OrganizationForm isEditing={false} org="" />
+      </Suspense>
     </div>
   )
 }
