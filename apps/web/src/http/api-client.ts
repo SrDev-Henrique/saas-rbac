@@ -1,9 +1,5 @@
+import { env } from '@saas/env'
 import ky from 'ky'
-
-function resolveBaseUrl(): string {
-  const base = 'https://saas-rbac-em1b.onrender.com'
-  return base.replace(/\/$/, '')
-}
 
 function getCookie(name: string): string | null {
   if (typeof document === 'undefined') return null
@@ -14,7 +10,7 @@ function getCookie(name: string): string | null {
 }
 
 export const api = ky.create({
-  prefixUrl: resolveBaseUrl(),
+  prefixUrl: env.NEXT_PUBLIC_API_URL,
   hooks: {
     beforeRequest: [
       async (request) => {
