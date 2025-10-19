@@ -83,7 +83,7 @@ Create a `.env` at the repository root. These variables are validated by `packag
 
 ```bash
 # Server
-SERVER_PORT=3333
+PORT=3333
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/next-saas?schema=public"
 JWT_SECRET="replace-with-a-strong-secret"
 

@@ -60,7 +60,7 @@ app.register(fastifySwagger, {
         'fullstack SaaS multi-tenant & RBAC with Next.js, Prisma, Fastify, Zod and TypeScript',
       version: '1.0.0',
     },
-    servers: [{ url: `http://localhost:${env.SERVER_PORT}` }],
+    servers: [{ url: `http://localhost:${env.PORT}` }],
     components: {
       securitySchemes: {
         bearerAuth: {
